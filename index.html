@@ -347,19 +347,76 @@
     h1 { font-size: 22px; }
     h2 { font-size: 19px; }
   }
+  /* Language toggle */
+  .lang-toggle {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    gap: 0;
+  }
+  .lang-toggle button {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    color: var(--muted);
+    border-radius: 16px;
+    transition: all 0.15s;
+  }
+  .lang-toggle button.active {
+    background: var(--primary);
+    color: white;
+  }
+  body.lang-en .lang-zh-only { display: none; }
+  body.lang-zh .lang-en-only { display: none; }
   /* Print */
   @media print {
     .toc { display: none; }
+    .lang-toggle { display: none; }
     .layout { grid-template-columns: 1fr; }
     main { box-shadow: none; border: none; padding: 0; }
   }
 </style>
 </head>
-<body>
+<body class="lang-zh">
+
+<div class="lang-toggle">
+  <button id="btn-zh" class="active" onclick="setLang('zh')">中文</button>
+  <button id="btn-en" onclick="setLang('en')">English</button>
+</div>
+
+<script>
+function setLang(lang) {
+  document.body.className = 'lang-' + lang;
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  localStorage.setItem('paper-lang', lang);
+  // Re-render Plotly figures if needed (they autoresize on display)
+  if (window.Plotly) {
+    document.querySelectorAll('.plot').forEach(el => {
+      if (el.offsetParent !== null) Plotly.Plots.resize(el);
+    });
+  }
+}
+// Restore saved preference
+(function() {
+  const saved = localStorage.getItem('paper-lang');
+  if (saved === 'en') setLang('en');
+})();
+</script>
 
 <div class="layout">
 
-<nav class="toc">
+<nav class="toc lang-zh-only">
   <div class="toc-title">目 录</div>
   <ul>
     <li><a href="#abstract">摘要</a></li>
@@ -405,14 +462,69 @@
   </ul>
 </nav>
 
+<nav class="toc lang-en-only">
+  <div class="toc-title">CONTENTS</div>
+  <ul>
+    <li><a href="#abstract-en">Abstract</a></li>
+    <li><a href="#intro-en">1. Introduction</a>
+      <ul>
+        <li class="l2"><a href="#intro-1-1-en">1.1 A Sharp Question</a></li>
+        <li class="l2"><a href="#intro-1-2-en">1.2 Three Existing Explanations</a></li>
+        <li class="l2"><a href="#intro-1-3-en">1.3 Across Six Traditions</a></li>
+        <li class="l2"><a href="#intro-1-4-en">1.4 Three Findings &amp; A Claim</a></li>
+      </ul>
+    </li>
+    <li><a href="#theory-en">2. Theoretical Framework</a>
+      <ul>
+        <li class="l2"><a href="#theory-2-1-en">2.1 Levine's Hypothesis</a></li>
+        <li class="l2"><a href="#theory-2-2-en">2.2 Berman-Tierney Triad</a></li>
+        <li class="l2"><a href="#theory-2-3-en">2.3 Seven-Layer Structure</a></li>
+        <li class="l2"><a href="#theory-2-4-en">2.4 Three Mechanisms</a></li>
+        <li class="l2"><a href="#theory-2-5-en">2.5 Defining Constitutionalism</a></li>
+      </ul>
+    </li>
+    <li><a href="#method-en">3. Data &amp; Method</a></li>
+    <li><a href="#results-en">4. Empirical Findings</a>
+      <ul>
+        <li class="l2"><a href="#r-4-1-en">4.1 Anchor Validation</a></li>
+        <li class="l2"><a href="#r-4-2-en">4.2 Full-Spectrum Scan</a></li>
+        <li class="l2"><a href="#r-4-3-en">4.3 Legitimate Categories</a></li>
+        <li class="l2"><a href="#r-4-4-en">4.4 Oscillating Gongyi</a></li>
+        <li class="l2"><a href="#r-4-5-en">4.5 Universitas Prohibited</a></li>
+        <li class="l2"><a href="#r-4-6-en">4.6 Boundary Probe</a></li>
+        <li class="l2"><a href="#r-4-7-en">4.7 The Dangguzhihuo</a></li>
+        <li class="l2"><a href="#r-4-8-en">4.8 Same-Root Different-Suffix</a></li>
+        <li class="l2"><a href="#r-4-9-en">4.9 Vector Arithmetic</a></li>
+        <li class="l2"><a href="#r-4-10-en">4.10 Donglin Naming</a></li>
+        <li class="l2"><a href="#r-4-11-en">4.11 Late Qing Dual Track</a></li>
+      </ul>
+    </li>
+    <li><a href="#dynamics-en">5. Discursive Dynamics</a></li>
+    <li><a href="#comparison-en">6. Cross-Civilizational Comparison</a></li>
+    <li><a href="#persistence-en">7. Persistence Mechanisms</a></li>
+    <li><a href="#limitations-en">8. Limitations</a></li>
+    <li><a href="#conclusion-en">9. Conclusion</a></li>
+    <li><a href="#references-en">References</a></li>
+  </ul>
+</nav>
+
 <main>
 
-<div class="title-block">
+<div class="title-block lang-zh-only">
   <h1>中文政治词汇中合法横向联合的范畴边界<br><span style="font-size:0.8em">——<em>Universitas</em> 缺失的两千五百年</span></h1>
   <div class="meta">
     <span class="author">张笑宇</span> &nbsp;·&nbsp; 工作论文 &nbsp;·&nbsp; 2026 年 4 月
   </div>
 </div>
+
+<div class="title-block lang-en-only">
+  <h1>The Categorical Boundary of Legitimate Horizontal Association in Chinese Political Vocabulary<br><span style="font-size:0.8em">— Twenty-five Centuries of <em>Universitas</em> Absence</span></h1>
+  <div class="meta">
+    <span class="author">Zhang Xiaoyu</span> &nbsp;·&nbsp; Working Paper &nbsp;·&nbsp; April 2026
+  </div>
+</div>
+
+<div class="lang-zh-only">
 
 <section id="abstract" class="abstract">
   <div class="abstract-title">摘 要</div>
@@ -1063,6 +1175,586 @@ $$\text{Polarity}(w) = \frac{1}{|A_+|}\sum_{a \in A_+} \cos(w, a) - \frac{1}{|A_
 </ul>
 
 </section>
+
+</div>
+<!-- end lang-zh-only -->
+
+<div class="lang-en-only">
+
+<section id="abstract-en" class="abstract">
+  <div class="abstract-title">ABSTRACT</div>
+  <p>In November 1894, Sun Yat-sen founded the first anti-Qing political organization in Honolulu, calling it the "Xingzhonghui" (Revive China Association). The "Baoguohui" of the 1898 Reform, the "Guangfuhui" of 1903, the "Tongmenghui" of 1905 in Tokyo—every late-Qing reform group used "hui" (会, association). Not until 1912, when Song Jiaoren reorganized the Tongmenghui into the Kuomintang (Guomindang), did the character "dang" (党, party) get formally promoted; but Song was assassinated the following year, and this first Chinese attempt to organize political power under "dang" failed at its first try.</p>
+  <p>Why "hui" and not "dang"? Because "hui" in Chinese carries meanings of sacrifice (社稷之会), covenant (盟会), and gathering (讲会)—none with the stigma of factional collusion. "Dang", from the <em>Analects</em>' "<em>qun er bu dang</em>" (associate without forming factions) onward, has for twenty-five centuries been bound to "<em>si</em>" (private), "<em>e bi</em>" (collusion), and "<em>pian si</em>" (partiality). Reformers are not incapable of organizing—they are incapable of using the character "dang".</p>
+  <p>This paper asks: which words in Chinese can legitimately denote horizontal political association? Which are sanctioned, which condemned, which oscillate? Tracked across dynasties, how does the distribution evolve?</p>
+  <p>Method: a corpus of 104 million characters of classical Chinese spanning the pre-Qin to late Qing, ten independently trained period-specific word2vec models, and a full-spectrum scan of about 130 candidate words (organized into seven semantic layers), measuring each word's "polarity" (whether the discourse of its era treats it as positive or negative). Four findings.</p>
+  <p><strong>I. Words fall into three groups.</strong> One group is consistently positive across ten dynasties—friendship, moral identity, ethical principles, scholarly activity. One group oscillates—typically collective-decision words: "<em>gongyi</em>" (public deliberation) is strongly positive in Han (+0.227), falls to negative in Tang (−0.106), recovers in Song (+0.181). One group is consistently negative—<em>dang</em>, <em>qun</em>, <em>tu</em>, <em>bei</em>, <em>lei</em>, <em>chai</em>… united by the trait of "members absorbed into the collective," averaging around −0.10 across ten dynasties.</p>
+  <p><strong>II. Not all "collective vocabulary" is prohibited.</strong> Oath-bond words (<em>meng</em>, <em>shi</em>, <em>qi</em>, <em>yue</em>, <em>jieyi</em>) are usable; community words (<em>she</em>, <em>xiangdang</em>, <em>zongzu</em>, <em>linli</em>) are usable. What is prohibited is exactly the "individual-absorbed-into-corporate-person" type—<em>dang</em>, <em>chai</em>, <em>tu</em>, <em>lü</em>, <em>bei</em>, <em>lei</em>, <em>qun</em>, <em>zhong</em>, <em>wu</em>, <em>pai</em>, <em>tuan</em>, all negative. Only one character escapes: "<em>hui</em>" (会), with mean polarity +0.049. It came to bear nearly all naming functions of legitimate horizontal organizations (yihui/parliament, guohui/national assembly, xuehui/learned society, Xingzhonghui, Tongmenghui, Guangfuhui).</p>
+  <p><strong>III. This distribution maps precisely onto three medieval European legal categories.</strong> Berman (1983) and Tierney (1955), historians of medieval European law, identified that Europe developed three legitimate forms of collective vocabulary: <em>conjuratio</em> (sworn association), <em>communitas</em> (community), <em>universitas</em> (corporation/legal person). Chinese has the first two—"<em>meng</em>" and "<em>shi</em>" are <em>conjuratio</em>, "<em>zongzu</em>" and "<em>xiangdang</em>" are <em>communitas</em>—but the <em>universitas</em> category (corporate legal person as legitimate political subject) does not exist in Chinese. This is the precise answer to "why China never developed constitutionalism."</p>
+  <p><strong>IV. The Late Ming Donglin case is a near-perfect natural experiment.</strong> The same group of people—Gu Xiancheng, Gao Panlong, and a few dozen Confucian scholars—are at polarity +0.054 when they call themselves "Donglin Academy" (Donglin Shuyuan), but at −0.108 when their opponents call them "Donglin Party" (Donglin Dang). One name change, a gap of 0.184—nearly the entire distance between "<em>junzi</em>" (gentleman) and "<em>xiaoren</em>" (petty man). And in the late Qing: Western political terms imported from Japanese between 1898 and 1911 split into two tracks—"yihui" (parliament), "guohui" (national assembly), "xuehui" (learned society) landed smoothly (polarity around +0.05), but "<em>zhengdang</em>" (political party), "<em>mindang</em>" (people's party) remained condemned (−0.077 and −0.103). The "hui" lineage passes, the "dang" lineage is blocked—this is the last manifestation of the precise morphology of the prohibition.</p>
+  <p>Putting these findings together gives a three-mechanism framework: territorial corporate organization, discursive legitimacy of horizontal association (this paper's focus), and dissolution of consanguineous community. This refines Acemoglu &amp; Robinson's (2019) "narrow corridor" model for the Chinese context. Singapore, currently the only stable "Free Chinese" polity, succeeded by simultaneously reforming all three mechanisms.</p>
+  <div class="keywords"><strong>Keywords:</strong> Chinese political vocabulary · legitimate horizontal association · word embeddings · computational conceptual history · comparative institutional analysis · <em>universitas</em></div>
+</section>
+
+<section id="intro-en">
+<h2>1. Introduction</h2>
+
+<h3 id="intro-1-1-en">1.1 A Sharp Question</h3>
+
+<p>On 24 November 1894, Sun Yat-sen founded the Xingzhonghui (Revive China Association) in Honolulu. "Xingzhonghui" sounds unremarkable today, but it was a carefully chosen name. In late-nineteenth-century Chinese political vocabulary, "hui" was a special character—it carried connotations of sacrifice (the rites of the altars of soil and grain), covenant (oath-bound assemblies), gathering (lecture meetings), and none of the stigma of factional collusion. It was not "dang"; not "meng" (盟, by then heavily negativized in the late Qing); not "she" (社, whose Late Ming failure under the Fushe showed it could be turned against its bearers). In Chinese political discourse, "hui" was almost the only safe island left.</p>
+
+<p>This kind of lexical avoidance was not Sun Yat-sen's personal idiosyncrasy. The Guangxu Emperor's "Mingding Guoshi" edict of 11 June 1898, declaring the Hundred Days' Reform—several hundred characters, not one "zhengdang." Kang Youwei and Liang Qichao's reform organization was called "Baoguohui"—again, "hui." In 1903 Cai Yuanpei and Zhang Taiyan founded the "Guangfuhui." In 1905 Chinese students in Tokyo organized their anti-Qing alliance as the "Tongmenghui"—"tongmeng" was itself a semantic defense, but it still needed "hui" as anchor. When Song Jiaoren reorganized the Tongmenghui into the Kuomintang in 1912, he had to use "guo" (national) to lend legitimacy to "dang"; the experiment collapsed the next year when Song was assassinated.</p>
+
+<p>Behind every lexical choice is the same question: <strong>why is "dang" always an attack-word in Chinese while "hui" is legitimate? Why does every reformer trying to organize a supra-kinship, durable political body capable of dialogue with supreme authority have to walk carefully around the character "dang"?</strong></p>
+
+<p>This question is sharper than it first appears. It is not "why did China fall behind"—around 1750, China and Europe were broadly comparable in per capita income, urbanization, commercial complexity (Wong 1997; Pomeranz 2000). Nor is it "why no democracy"—democracy is a rather late political form requiring not only institutions but also specific discursive soil. The question is: <strong>given multiple windows in which China possessed material conditions, bureaucratic rationality, and commercial prosperity, why did none yield a legitimate political subject capable of constraining supreme authority and composed of non-kin members?</strong></p>
+
+<p>To answer this, one must enter the internals of Chinese political vocabulary. But tracking a single character ("dang") or a single period (Northern Song factional strife) is insufficient—a character's fate is co-defined by the cluster of characters around it. Why is "dang" an attack-word? The answer cannot be found in "dang" alone; it must be found in the relations among "dang", "hui", "she", "meng", "pai", "tu", "qun", "xue" and other horizontal-collective candidates. This paper therefore scans all such candidates at once, mapping which are permitted, which condemned, which oscillate. The detail of Sun Yat-sen choosing "hui" instead of "dang" is thereby placed back inside twenty-five centuries of semantic-field evolution.</p>
+
+<h3 id="intro-1-2-en">1.2 Three Existing Explanations and Their Limits</h3>
+
+<p>Existing research offers three families of answers to "why did China not develop constitutionalism." Each has done substantial work; each has a horizon it cannot cross.</p>
+
+<p><strong>First, material-condition explanations</strong>—commerce, technology, military, geography (Pomeranz 2000; Allen 2009; Mokyr 1990). Wong (1997) and Pomeranz (2000) of the "California school" have already closed this path: by 1750 China and Europe were comparable on multiple key indicators. With material conditions similar but political trajectories divergent, the answer obviously lies elsewhere.</p>
+
+<p><strong>Second, political-institutional explanations</strong>, focusing on imperial sovereignty structure, bureaucratic organization, and the absence of merchant-military elite coalitions (Greif 2006; Mokyr &amp; Tabellini 2023; Acemoglu &amp; Robinson 2019; Stasavage 2020; Zhang 2018). The latest move is Mokyr &amp; Tabellini's "territorial corporations vs. kinship lineages": European territorial corporations (guilds, chartered cities, parliaments) had property rights and bargaining capacity to face the central state as legal counterparties; Chinese lineages structurally cannot play this role—they supplement the state, they do not constrain it. Powerful argument, but with two limits. First, Ogilvie (2019) has demonstrated that European guilds were predominantly rent-seeking organizations—"can bargain" and "promotes development" are not the same and must be kept distinct. Second, more importantly: this explanation reaches only organizational form, not the discursive conditions. Organizational absence and discursive-legitimacy absence are two sides of the same coin—the former in land and institutions, the latter in vocabulary and semantics. They are mutually causal.</p>
+
+<p><strong>Third, discursive-institutional explanations</strong>, whose fullest version is Ari Levine (2005, 2008). His close reading of late Northern Song political texts found: Northern Song political vocabulary itself made legitimate horizontal association among bureaucratic elites impossible at the discursive level. The Qingli reformers tried to redefine factionalism by distinguishing "<em>junzi zhi peng</em>" (gentlemen's friendship) from "<em>xiaoren zhi dang</em>" (petty men's faction), but failed quickly; the subsequent political cycle—Wang Anshi vs. Sima Guang (1069–86), Yuanyou conservatives' backlash (1086–93), Shaosheng reformers' revenge (1093–1100), to Cai Jing's blacklist (1100–04)—none ended in institutional accommodation; all escalated to political purge.</p>
+
+<p>Levine's reading remains the most acute on Chinese political discourse, covering the key 1067–1104 window. But his work leaves three open questions: does the prohibition extend beyond Northern Song? Are there legitimate horizontal-association categories other than "<em>pengdang</em>"? Where do these categories' boundaries with "<em>pengdang</em>" lie? Answering requires crossing a longer time, covering more candidates, with quantitatively verifiable methods—this paper's design.</p>
+
+<h3 id="intro-1-3-en">1.3 A Question Across Six Traditions</h3>
+
+<p>The factional prohibition has been identified by six scholarly traditions from different angles, but never tested quantitatively in one unified framework.</p>
+
+<p><strong>(1) Classical exegesis</strong> is the oldest. He Yan's <em>Collected Commentaries on the Analects</em> cites Kong Anguo: "Dang: to assist. Junzi though many do not privately assist; they accord with righteousness." Huang Kan, Zhu Xi, Liu Baonan—two millennia of exegetical consensus on the negativity of "dang" has never wavered.</p>
+
+<p><strong>(2) Republican to contemporary Sinology</strong> on factional strife. Xiao Gongquan's <em>History of Chinese Political Thought</em> (1945) treats factionalism as a thread of Chinese political thought. Chen Yinke's <em>Discussion of Tang Political History</em> (1944) built a paradigm explaining the Dangguzhihuo (Han partisan prohibition) and the Niu-Li factional strife from two layers: social-bloc (ruling-class lineages) and inner-outer court mirror (outer scholar-officials and inner eunuchs). Kawakatsu Yoshio's <em>Studies on the Six-Dynasties Aristocratic Society</em> (1982) explains the Dangguzhihuo from a "pure stream"–village opinion network angle, with a striking reverse narrative—the "pure stream" suppressed by the prohibition became the seed of the aristocratic system at the Wei-Jin transition. Utsunomiya Kiyoyoshi (1955) explains via centrifugal magnate economics. Yu Yingshi's <em>Zhu Xi's Historical World</em> (2003) systematically argues the Northern Song scholar-officials' "co-governance" subjectivity and the "constitutionalization of state policy" mechanism.</p>
+
+<p><strong>(3) Contemporary Sinology's discursive-political analysis.</strong> Peter Bol's <em>"This Culture of Ours"</em> (1992) traces the Tang-Song transformation of the "<em>shi</em>" concept from hereditary aristocracy to classicist bureaucracy. Hilde De Weerdt's <em>Information, Territory, and Networks</em> (2015) systematically documents the trans-regional discursive network Southern Song literati built through notebooks, court gazettes, maps, and collected works. Deng Xiaonan's <em>The Law of the Ancestors</em> (2006) reveals the Northern Song "ancestral law" as a discursive norm—a stillborn thin constitutionalism—and the process by which both factions appealed to it and mutually dissolved its force.</p>
+
+<p><strong>(4) Late Ming Donglin studies.</strong> Hucker (1957) was the first to clearly distinguish the Donglin <em>movement</em> (self-identification: scholarly-moral movement) from the Donglin <em>faction</em> (enemy naming: political faction). Ono Kazuko's <em>Studies on Late Ming Factions and Societies</em> (1962) pushed this distinction to its limit—she documented that core members like Gu Xiancheng and Gao Panlong never called themselves "Donglin Party"; the label "Donglin Party" first emerged at scale in the 1611 Li Sancai case. Dardess's <em>Blood and History in China</em> (2002) records the inflation of the "Donglin Party" label during the Tianqi-era persecution: from a core of dozens to a blacklist of 309, the vast majority of whom had never lectured at the Donglin Academy.</p>
+
+<p><strong>(5) Comparative institutional analysis.</strong> Greif (1994, 2006) on medieval Genoa reveals "path B"—through the self-enforcing design of the <em>podestà</em> institution, 145 years of commercial-revolution stability achieved without territorial corporations, finally eroding because the underlying lineage structure was not dissolved. Rubin (2017) on Islamic societies reveals a phenomenon mechanism-level near-isomorphic to China's factional prohibition—a self-reinforcing equilibrium of legitimacy exchange between sultan and <em>ulama</em>, excluding merchant elites from the bargaining table. Stasavage (2020) proposes a global comparative framework for "early democracy."</p>
+
+<p><strong>(6) The methodology of computational conceptual history.</strong> Hamilton, Leskovec &amp; Jurafsky (2016) laid the foundation for diachronic word-embedding comparison; Garg, Schiebinger, Jurafsky &amp; Zou (2018, <em>PNAS</em>) quantified a century of US gender and ethnic stereotypes; Kozlowski, Taddy &amp; Evans (2019, <em>ASR</em>) used antonym-pair mean projection to analyze class culture; Rodman (2020, <em>Political Analysis</em>) tracked 161 years of "equality." This toolkit is now mature; this paper is its first large-scale application to twenty-five centuries of Chinese political vocabulary.</p>
+
+<p>Each tradition sees one facet: exegesis sees character-level negativization; Chen Yinke and Kawakatsu see socio-political mechanisms; Bol and Yu see the <em>shi</em>'s subjectivity transformation; De Weerdt sees the existence-but-insufficiency of information flow; Levine sees Northern Song discursive rhetoric; Hucker, Ono, Dardess see the self/other asymmetry of Late Ming naming; Rubin sees cross-civilizational legitimacy lock-in. This paper places these facets into one analytical framework—through full-spectrum scanning of Chinese political vocabulary, integrating six traditions' qualitative observations into a quantifiably verifiable semantic-field evolutionary narrative.</p>
+
+<h3 id="intro-1-4-en">1.4 Three Findings and a New Claim</h3>
+
+<p>Using the word-embedding method of Mikolov et al. (2013), this paper trains ten independent period-specific models on a 104-million-character classical Chinese corpus spanning the pre-Qin to late Qing, covering pre-Qin, Western Han, Eastern Han, Tang, Song, Yuan, early-mid Ming, late Ming, early-mid Qing, late Qing. About 130 candidate words—organized in seven semantic layers (friendship, moral identity, ethical principles, scholarly activity, oath, collective decision, community, corporate candidates)—are full-spectrum scanned, with each word's polarity calculated per period.</p>
+
+<p><strong>Finding 1: Chinese political vocabulary does not lack "collective vocabulary"; it precisely lacks one specific category.</strong> Scanning shows that L1–L6 and L7a (community) candidates are consistently legitimate or oscillating across ten dynasties—friendship (you +0.151, pengyou +0.066), morality (junzi, xian +0.222), ethics (ren +0.262, gongyi +0.327), scholarship (xue +0.083, jiangxue +0.066, shuyuan +0.055), oath (meng +0.037, jieyi +0.106), collective decision (gongyi Han peak +0.227), community (zongzu +0.034, jishe +0.052).</p>
+
+<p>Only L7b—the "individual-absorbed-into-undifferentiated-collective" candidates—are uniformly negative: dang −0.095, chai −0.079, tu −0.077, lü −0.077, bei −0.074, lei −0.070, qun −0.060, zhong −0.041, wu −0.025, pai −0.023, tuan −0.011. The compounds in this layer are more deeply prohibited: pengdang −0.130, qundang −0.097, dangzheng −0.108, sidang −0.204, yandang −0.130. The sole exception is "hui" (μ = +0.049)—it escaped the prohibition and consequently bears nearly all legitimate horizontal-association functions, structural reasons analyzed in §5.</p>
+
+<p><strong>Finding 2: The prohibited category corresponds to <em>universitas</em> in the Berman-Tierney triad.</strong></p>
+
+<table>
+<thead>
+<tr><th>European category</th><th>Core</th><th>Chinese correspondence</th><th>Polarity</th></tr>
+</thead>
+<tbody>
+<tr><td><em>Conjuratio</em> (sworn association)</td><td>contractual, visible, members preserved</td><td>meng, shi, qi, yue, jieyi, huimeng</td><td>legitimate</td></tr>
+<tr><td><em>Communitas</em> (community)</td><td>ritual, territorial</td><td>she, xiangdang, zongzu, linli, zhouli</td><td>legitimate</td></tr>
+<tr><td><em>Universitas</em> (legal person)</td><td>members absorbed into legitimate collective</td><td>absent—dang, qun, tu, bei, lei, chai all negative</td><td>uniformly prohibited</td></tr>
+</tbody>
+</table>
+
+<p>Chinese discourse did not develop a category corresponding to <em>universitas</em>. The real form of the factional prohibition lies here: it is not generic suppression of all "collectivity," but the prohibition of one specific kind of collectivity—the kind that acts as a legitimate political subject, composed of undifferentiated members, capable of absorbing individuals and speaking on their behalf.</p>
+
+<p><strong>Finding 3: The prohibition targets a semantic structure ("acting as a legitimate political subject"), not specific characters.</strong> The same root in different compounds can fall into completely different semantic fields. "Hui" as single character is legitimate (+0.049), but with concrete political content compounds branch:</p>
+
+<ul>
+  <li>Legitimate: yihui (+0.042), guohui (+0.057), xuehui (+0.072), jianghui (+0.064), Baoguohui (+0.073)</li>
+  <li>Contrast (without "hui"): pengdang (−0.130)</li>
+</ul>
+
+<p>"She" is neutral as single character (+0.001), but with concrete movements diverges:</p>
+<ul>
+  <li>Legitimate: jishe (+0.052), sheji (+0.043), gongshe (implicit +0.178)</li>
+  <li>Stigmatized: Fushe (Late Ming −0.137), Jishe (−0.102), jieshe (Late Qing −0.117)</li>
+</ul>
+
+<p>"Pai" as single character is near-neutral (−0.023), but xuepai in the late Qing reaches −0.109.</p>
+
+<p>The factional prohibition does not operate at the character layer—single characters "hui," "she," "meng" are legitimate—but at the semantic-structure layer: any non-kin collective identified as "acting as a legitimate political subject," regardless of what character it bears, gets pulled into prohibited territory. This is more refined than "Chinese suppresses certain characters."</p>
+
+<div class="callout">
+  <p style="margin:0"><strong>New claim:</strong> China did not develop constitutionalism not because Chinese discourse lacks "collective vocabulary"—Chinese has complete <em>conjuratio</em> (meng, shi, qi, yue), <em>communitas</em> (she, xiangdang, zongzu), collective deliberation (gongyi, gonglun, tingyi), and scholarly combination (jianghui, shuyuan) legitimate categories. What China precisely lacks is the <em>universitas</em> category—"undifferentiated members as legitimate collective political subject." From the pre-Qin <em>Analects</em>' "<em>qun er bu dang</em>" onward, across the judicial institutionalization of the Han partisan prohibition, the Northern Song Qingli discursive war, the Late Ming Donglin naming war, the late-Qing introduction of "<em>zhengdang</em>"—twenty-five centuries of stable operation.</p>
+</div>
+
+<p>Combined into a three-mechanism framework—territorial corporate organization, discursive legitimacy of horizontal association (this paper's focus), dissolution of consanguineous community—this refines the Acemoglu &amp; Robinson (2019) "narrow corridor" model for the Chinese context, and for the first time provides systematic quantitative evidence for "discursive legitimacy prohibition" as an institutional form parallel to "institutional path dependence."</p>
+
+<h3 id="intro-1-5-en">1.5 Paper Structure</h3>
+
+<p>§2 introduces the Berman-Tierney three-category framework (<em>conjuratio</em>, <em>communitas</em>, <em>universitas</em>), maps it onto a seven-layer structure of Chinese political vocabulary, and positions the three-mechanism framework as a Chinese-context refinement of the Acemoglu-Robinson "narrow corridor" model. §3 describes data and method, including cross-period alignment, bootstrap CI, and polysemy disambiguation. §4 is the empirical body—from full-spectrum scan, to internal structure of categories, to root vs. compound divergence, to operation in specific historical events, ending with the late-Qing "hui" legitimation vs. "dang" blockade dual track. §5 discusses persistence dynamics: the parallel failures of 1043 Northern Song and 1620s Late Ming both invoking Ouyang Xiu's <em>On Factions</em>; Kawakatsu's reverse narrative on Dangguzhihuo "losers becoming aristocratic winners"; De Weerdt on the existence-but-insufficiency of Southern Song discursive networks; Deng Xiaonan on "ancestral law" as isomorphic instrumentalized equilibrium. §6 cross-civilizational comparison: Joseon Korea (isolation test), medieval Genoa (alternative path), Islamic world (Rubin 2017's isomorphic case), Singapore (simultaneous reform of all three mechanisms). §7 discusses methodological implications for institutional-change theory. §8 acknowledges limits and proposes a research agenda. §9 concludes.</p>
+
+</section>
+
+<section id="theory-en">
+<h2>2. Theoretical Framework</h2>
+
+<h3 id="theory-2-1-en">2.1 Levine's Hypothesis and its Reception</h3>
+
+<p>Ari Levine's <em>Divided by a Common Language</em> (2008, building on Levine 2005) advances three nested claims about Northern Song political discourse. First, the core function of "<em>pengdang</em>" in Northern Song political practice is not description but attack—every political group uses "<em>pengdang</em>" to accuse opponents while firmly denying its own factional character. This "use against others, deny for oneself" asymmetry prevents "<em>pengdang</em>" from evolving into a neutral descriptive category. Second, Fan Zhongyan and Ouyang Xiu's 1043–44 attempt to open discursive space for legitimate horizontal association by distinguishing "gentlemen's friendship" from "petty men's faction" did not succeed. Third, imperial authority is the ultimate arbiter—any nascent horizontal association can have its legitimacy revoked at any time.</p>
+
+<p>Levine's work has been widely accepted (Google Scholar citations exceed 380 as of 2026); his close-reading precision remains unsurpassed. This paper extends Levine in three directions: the analytical period from Northern Song's thirty-seven years to twenty-five centuries spanning pre-Qin to late Qing; qualitative rhetorical analysis converted to quantitatively verifiable word-embedding observation; "<em>pengdang</em>" as a single word placed back into its entire semantic field, identifying the precise boundary of the prohibition (which roots are prohibited, which are not, where the boundary lies). Levine clarified Northern Song "<em>pengdang</em>" as an asymmetrically used attack tool; this paper further clarifies the precise categorical boundary of this mechanism's operation, and its stable form across longer time.</p>
+
+<h3 id="theory-2-2-en">2.2 A Key Conceptual Resource: The Berman-Tierney Triad</h3>
+
+<p>To see clearly what China lacks, we borrow a tool from European legal history. This tool is rarely cited in Chinese studies but is crucial for the argument here. Harold Berman's <em>Law and Revolution: The Formation of the Western Legal Tradition</em> (1983) systematically argues that the 12th–13th century European "Papal Revolution," and the legal science that followed, were built on three independent but mutually supporting legitimating terms—<em>universitas</em>, <em>communitas</em>, <em>conjuratio</em>. Brian Tierney's <em>Foundations of the Conciliar Theory</em> (1955) traced even earlier the development of <em>universitas</em> in the hands of medieval canon lawyers. Together these two books establish a crucial point: what Europe developed is not "one kind" of collective vocabulary but <strong>three</strong> mutually specialized categories of collectivity.</p>
+
+<p><strong><em>Universitas</em> (legal person)</strong> is the most crucial. Its Latin literal meaning is "wholeness," but in medieval law it acquired a precise technical sense: a collective composed of undifferentiated members, acting as a single legal subject. Its core feature is <strong>individual absorption</strong>—once an individual joins a <em>universitas</em>, when acting as member he no longer acts in his own name but in the name of the whole. The corporation can therefore own property, sign contracts, sue, be sued—it is a <strong>fabricated legal person</strong>. Medieval European universities (<em>universitas magistrorum et scholarium</em>), cities (<em>universitas civium</em>), guilds (<em>universitas mercatorum</em>), monastic orders (<em>universitas religiosorum</em>), and later territorial corporations all belong to <em>universitas</em>. Mokyr-Tabellini's (2023) "territorial corporate organization" is just <em>universitas</em> concretized at the geographic-political level.</p>
+
+<p><strong><em>Communitas</em> (community)</strong> is another kind, pointing to territorial, ritual, internally graded collectives. Medieval European villages, parishes, provinces, nations (<em>natio</em>) are all <em>communitas</em>. The key difference from <em>universitas</em>: <em>communitas</em> does not require absorption—members retain their original differences, status, family belonging. It is closer to "who we are" than to "we as single subject acting."</p>
+
+<p><strong><em>Conjuratio</em> (sworn association)</strong> is the third, pointing to contractual, oath-bound, dissoluble collectives. Most medieval European cities began as <em>conjuratio</em>: a group of citizens swearing to each other, signing contracts, paying joint deposits, forming a union of mutual protection and mutual constraint. The crucial feature is <strong>contractuality</strong>—members join through explicit agreement and can in principle leave by dissolving the agreement. Crusades, commercial leagues, knightly orders, citizens' uprisings all belong to this category.</p>
+
+<p>In medieval Europe these three are layered, not mutually exclusive. A specific city could simultaneously be <em>universitas civium</em> (legal person), <em>communitas</em> (territorial community), and <em>conjuratio</em> (citizens' sworn association). But functionally each does different work: <em>universitas</em> provides legal personhood and bargaining capacity, <em>communitas</em> provides territorial belonging and cultural identity, <em>conjuratio</em> provides organizational origin and mutual contractual constraint. Only when all three coexist can a sustainable political subject capable of constraining supreme authority, composed of non-kin members, form.</p>
+
+<p>§4's full-spectrum scan will show: Chinese discourse developed legitimate <em>conjuratio</em> and <em>communitas</em> categories—meng, shi, qi, yue, jieyi, huimeng serve <em>conjuratio</em>; she, xiangdang, zongzu, jishe serve <em>communitas</em>—but as "legitimate collective with members absorbed," <em>universitas</em>'s candidate roots (dang, qun, tu, bei, lei, chai) are systematically stigmatized.</p>
+
+<p>"Why China did not develop constitutionalism" is hereby refined: not a generic "collective vocabulary absence," but a precise <strong>specific-category</strong> absence, and this category can be precisely pointed out.</p>
+
+<h3 id="theory-2-3-en">2.3 Seven-Layer Structure of Chinese Political Vocabulary</h3>
+
+<p>Building on the Berman-Tierney triad, this paper further identifies a seven-layer structure of Chinese political-collective vocabulary, capturing the distribution along two axes: abstraction level (from concrete to abstract) and collectivity form (from dyadic relation to corporate person).</p>
+
+<table>
+<thead>
+<tr><th>Layer</th><th>Type</th><th>Chinese examples</th><th>European correspondence</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Dyadic friendship</td><td>you, pengyou, zhiji, guyou</td><td><em>amicus</em>, friendship</td></tr>
+<tr><td>2</td><td>Individual moral identity</td><td>junzi, xianzhe, yishi, xia</td><td>knight, gentleman</td></tr>
+<tr><td>3</td><td>Abstract ethical principle</td><td>ren, yi, zhong, jie, gongyi</td><td><em>justitia</em>, justice</td></tr>
+<tr><td>4</td><td>Scholarly activity</td><td>jiangxue, jianghui, daoxue, shuyuan</td><td><em>studium</em>, university</td></tr>
+<tr><td>5</td><td>Oath / <em>Conjuratio</em></td><td>meng, shi, qi, yue, jieyi, huimeng</td><td><em>conjuratio</em>, sworn brotherhood</td></tr>
+<tr><td>6</td><td>Collective decision</td><td>yi, gongyi, gonglun, tingyi, chaoyi</td><td>parliament, council</td></tr>
+<tr><td>7a</td><td><em>Communitas</em></td><td>she, xiangdang, zongzu, linli</td><td><em>communitas</em>, parish</td></tr>
+<tr style="background:rgba(196,69,54,0.05)"><td><strong>7b</strong></td><td><strong><em>Universitas</em> (legal person)</strong></td><td><strong>dang, qun, tu, bei, lei, chai</strong></td><td><strong><em>universitas</em>, corporation</strong></td></tr>
+</tbody>
+</table>
+
+<p>L1–L5 deal with relations, attributes, principles, activities, and dyadic agreement—multi-person participation, but content remains pairwise or individual. L6 crosses a key threshold: it directly describes collective political deliberation. L7 splits into 7a (<em>communitas</em>, territorial community) and 7b (<em>universitas</em>, legal person). The European tradition developed legitimate vocabulary at all seven layers—<em>universitas</em>, <em>communitas</em>, <em>conjuratio</em> provide legitimacy especially at L7 (particularly 7b). In this framework the paper's core empirical claim can be stated: Chinese political vocabulary developed legitimate forms at L1–L5, L6, L7a, but at L7b—<em>universitas</em>—all candidate roots are systematically negativized. This is more refined than Levine's "factional prohibition," and fits the empirical evidence better (§4).</p>
+
+<h3 id="theory-2-4-en">2.4 Three Mechanisms—Chinese-context refinement of the A-R framework</h3>
+
+<p>Acemoglu &amp; Robinson's <em>The Narrow Corridor</em> (2019) proposes a two-factor model: entering the "narrow corridor" (state-society balance) requires state and society both strong, mutually constrained via "Red Queen effects." China is placed in the "despotic Leviathan" category. The A-R framework's handling of China has been criticized as too coarse (Borràs Arumí et al. question its "straw-man" China account). More important than critiquing A-R is to see: A-R treats "society" as a single pole, which is insufficient for China; it must be unpacked. This paper splits the "society" pole into three independent mechanisms.</p>
+
+<p><strong>Mechanism 1: Territorial corporate organization (<em>universitas</em>).</strong> Mokyr-Tabellini (2023)'s core variable. European territorial corporations—guilds, chartered cities, parliaments, Estates-General—had property rights and bargaining capacity to face the central state as legal counterparties. Chinese lineages structurally cannot play this role. Ogilvie (2019) poses a fundamental challenge to M-T: European guilds were primarily rent-seeking. But Ogilvie's critique is normative (rent-seeking is bad), not structural (territorial corporations don't exist)—the "guild-elite rent-seeking coalition" she describes <em>is</em> a bargaining structure, aligned in direction with M-T's core claim. Mechanism 1 is therefore precisely stated as "existence of territorial corporations as sustainable bargaining counterparties."</p>
+
+<p><strong>Mechanism 2: Discursive legitimacy of horizontal association (existence of the <em>universitas</em> category).</strong> The core variable this paper aims to quantitatively isolate from the other two. Precise statement: in Chinese discourse, all candidate roots corresponding to <em>universitas</em> (dang, qun, tu, bei, lei, chai) have been systematically negativized for twenty-five centuries from pre-Qin to late Qing. §4 provides systematic quantitative evidence.</p>
+
+<p><strong>Mechanism 3: Dissolution of consanguineous community.</strong> The variable Ōtsuka (1966) identified and long ignored by Chinese scholarship. Asian community (<em>kyōdōtai</em>) is a kinship-based production unit organizing land, labor, and exchange by reciprocity rather than market logic. Capitalism could sprout in medieval European cities because the Church continually banned cousin marriage from the 4th–7th centuries onward, actively breaking the consanguineous community; Asian societies never went through this rupture.</p>
+
+<p><strong>Relations among the three mechanisms.</strong> The three are analytically independent—each can in principle exist or fail alone—but empirically mutually reinforcing. Tokugawa Japan had Mechanism 1 (260+ daimyō domains) but lacked Mechanisms 2 and 3, resulting in Meiji authoritarian modernization. Joseon Korea had Mechanism 1 (1,000+ academies) but Mechanisms 2 and 3 failed, no constitutional result. Medieval Genoa lacked Mechanism 1 but achieved 145 years of commercial-revolution stability through <em>podestà</em> self-enforcement; the <em>podesteria</em> ultimately self-eroded because underlying lineage was not dissolved but reinforced. Only when all three are present does stable constitutional development emerge—the argument of §6's cross-civilizational comparison.</p>
+
+<h3 id="theory-2-5-en">2.5 Defining Constitutionalism Precisely</h3>
+
+<p>One final theoretical clarification. This paper adopts the thin, constraining definition from Stasavage (2020) and Acemoglu &amp; Robinson (2019), decomposed into three progressive levels.</p>
+
+<p><strong>Level A (minimum threshold):</strong> institutionalized, cross-cutting non-state entities exist as legitimate counterparties to supreme-authority decisions—i.e., <em>universitas</em> in the Mokyr-Tabellini sense.</p>
+
+<p><strong>Level B (early democracy, Stasavage sense):</strong> these counterparties hold active consent rights on specific decisions, not merely being consulted. This requires that horizontal associations be not only physically present but also discursively acknowledged as legitimate political subjects.</p>
+
+<p><strong>Level C (modern democracy):</strong> Level B consent rights are normalized into representative institutions, with periodic elections and non-imperative mandates.</p>
+
+<p>China failed at Level A—this is the paper's core positioning. What needs explaining is not "why China did not develop modern representation" (which presupposes Level B in place), but "why China did not develop minimum-threshold cross-cutting legitimate political subject." This positioning also clarifies the inaccuracy of Stasavage's claim that "as far back as we have historical writing in China, we don't see traditions or histories of council governance or early democracy." §4.4 will show: Han-era "<em>gongyi</em>" in word-embedding space has strong positive polarity (Western Han +0.165, Eastern Han +0.232—exceeding the Northern Song peak +0.181). Han China did have a Level-B legitimate discursive space—suppressed in Tang, reactivated in Song—but never rose to Level A. L6 (gongyi) legitimacy oscillated across dynasties; <em>universitas</em> as legitimate political subject was always absent.</p>
+
+</section>
+
+<section id="method-en">
+<h2>3. Data and Method</h2>
+
+<h3 id="method-3-1-en">3.1 Corpus Construction</h3>
+
+<p>This paper's empirical foundation is <em>daizhigev20</em> (Daizhige Ancient Texts Corpus v2.0), currently the largest open-source classical Chinese corpus (6.9 GB, 15,694 text files). On this base, ten period-specific corpora are constructed corresponding to major Chinese historical periods, totaling 103.8 million characters: pre-Qin (1.9 M), Western Han (2.5 M), Eastern Han (2.6 M), Tang (6.8 M), Song (22.0 M), Yuan (3.5 M), early-mid Ming (15.1 M), late Ming (6.5 M), early-mid Qing (19.6 M), late Qing (23.3 M). The corpus covers elite political discourse—dynastic histories, collected works, memorials, veritable records, Confucian classics—not folk vernacular literature or religious texts. This boundary defines the scope of the paper's claims.</p>
+
+<h3 id="method-3-2-en">3.2 Polarity Score</h3>
+
+<p>Polarity follows the standard method in computational conceptual history (Hamilton et al. 2016; Garg et al. 2018; Kozlowski et al. 2019), defined for word <em>w</em> as the difference between mean cosine to positive anchors and mean cosine to negative anchors. Primary anchor sets: $A_+ = \{$jun, zhong, xian, ren, yi, gong$\}$; $A_- = \{$xiao, jian, ning, xie, si$\}$. The formula is functionally equivalent to Garg et al. (2018)'s relative norm difference. Four independent anchor families (moral, legal, court-private, loyalty) are also computed in parallel; results agree qualitatively.</p>
+
+<h3 id="method-3-3-en">3.3 Full-Spectrum Scan Design</h3>
+
+<p>Per §2.3's seven-layer structure, all candidate words capable of bearing "horizontal legitimate association" function are listed for scanning—including both core words from existing literature (dang, pengdang, gongyi, shuyuan) and less-studied roots (chai, tu, bei, wu, lü, she, hui, meng). Total: about 130 candidates × 10 dynasties = approximately 1,300 polarity observations. For each candidate, polarity is computed per dynasty (using its vector if in vocabulary, or implicit compound vector of constituent characters otherwise). The output is a 130 × 10 polarity matrix, the empirical basis of §4.</p>
+
+<h3 id="method-3-4-en">3.4 Cross-Period Alignment and Bootstrap CI</h3>
+
+<p>Polarity comparison uses within-space relative quantities (Kozlowski 2019 demonstrates such projections need no Procrustes alignment). Online appendix A.5 provides a Procrustes-aligned robustness check; results agree. Pre-Qin corpus at 1.9 M characters falls into the "small corpus" category; per Antoniak &amp; Mimno (2018), bootstrap CI is reported for key analyses.</p>
+
+<h3 id="method-3-5-en">3.5 Polysemy Disambiguation</h3>
+
+<p>"Dang" has at least three independent senses: administrative unit ("five hundred families form a dang"), kinship lineage ("father's dang, mother's dang"), factional clique ("<em>qun er bu dang</em>", "<em>e dang</em>"). Context-rule-based disambiguation: for each occurrence of "dang," scan ±15 characters and classify as factional, kinship, administrative, or unspecified; retokenize and retrain word2vec. §4.3 reports: the factional sense yields sim(dang, si) = +0.463; administrative and kinship senses are near 0—the prohibition precisely targets the factional sense.</p>
+
+</section>
+
+<section id="results-en">
+<h2>4. Empirical Findings</h2>
+
+<p>This chapter proceeds from broad to narrow: full-spectrum landscape of the semantic field (§4.1–§4.2), internal structure of categories (§4.3–§4.5), root vs. compound divergence (§4.6), operation of the prohibition in specific historical events (§4.7–§4.9), and finally the Donglin naming experiment and the late-Qing dual track (§4.10–§4.11). Starting from the whole semantic field, "dang"'s fate is placed back in its larger genealogy. (For interactive figures, switch to the Chinese version.)</p>
+
+<h3 id="r-4-1-en">4.1 Anchor Validation</h3>
+
+<p>Before presenting main results, we confirm the polarity tool itself correctly distinguishes canonical positive/negative reference points across ten corpora. Across all ten periods, "junzi" and "zhong" consistently carry positive polarity; "jian" is strongly negative; "xiaoren" is negative or near-zero in most periods. The polarity tool correctly distinguishes positive/negative references across the 2,500-year span. Internal cohesion checks (online appendix A.4) show stable semantic axes for both anchor sets in all ten periods.</p>
+
+<h3 id="r-4-2-en">4.2 Full-Spectrum Scan: The Landscape of Legitimate Categories</h3>
+
+<p>Before analyzing any specific character (like "dang"), we present the landscape. A clear three-way structure emerges:</p>
+<ul>
+  <li><strong>Group 1 (legitimate categories):</strong> L1 friendship, L2 moral identity, L3 ethical principles, L4 scholarly activity—consistently legitimate across ten dynasties (ten-dynasty mean significantly positive).</li>
+  <li><strong>Group 2 (mildly positive, oscillating):</strong> L5 <em>Conjuratio</em>, L6 collective decision, L7a <em>Communitas</em>, L7b "legitimate-compound" candidates—broadly legitimate or oscillating, with ten-dynasty mean still positive.</li>
+  <li><strong>Group 3 (consistently prohibited):</strong> L7b single characters (−0.049), L7b prohibited compounds (−0.108)—consistently prohibited across ten dynasties, intensity close to the "negative control" group (−0.169).</li>
+</ul>
+
+<div class="callout">
+  <p style="margin:0">Chinese discourse is not generically prohibiting "collective vocabulary"—it precisely prohibits one specific category while leaving six others free to develop.</p>
+</div>
+
+<h3 id="r-4-3-en">4.3 Three Stable Legitimate Categories</h3>
+
+<p><strong>L1–L3 stable legitimacy.</strong> you (μ = +0.151), xian (+0.222), ren (+0.262), yi (+0.222), zhong (+0.233), gongyi (+0.327, among the highest). These words form the basic semantic field of "individual morality," with strong positive polarity from pre-Qin to late Qing, low standard deviation (mostly 0.03–0.06), cross-dynasty stable. They bear the legitimate function of "individual as moral subject"—but none functions as "collective as political subject." For the latter we must look at L4 and above.</p>
+
+<p><strong>L4 scholarly legitimacy.</strong> xue (+0.083), jiangxue (+0.066), jianghui (+0.064), daoxue (+0.027), lixue (+0.072), shuyuan (+0.055)—all legitimate. This is the strongest legitimate form Chinese discourse allows for "non-kin members organizing for joint action"—but with a precondition: the organization must be identified as <em>scholarly</em>, not political. §4.6's boundary probe will show this precondition's fragility: once "X xuepai" carries political meaning (late-Qing "xuepai" −0.109), it gets pulled into prohibited territory.</p>
+
+<p><strong>L5 <em>Conjuratio</em> mildly positive.</strong> meng (+0.037), shi (+0.034), qi (+0.010), yue (+0.014), jieyi (+0.106), huimeng (+0.058)—all mildly positive, bearing the legitimate function of contractual, oath-bound, dissoluble horizontal association. <em>Jieyi</em> (μ = +0.106) is particularly high—the cleanest Chinese form of "non-kin individuals mutually contracting." The "Peach Garden oath" of Guan Yu, Liu Bei, Zhang Fei is the most representative form of Chinese <em>conjuratio</em>. The legitimacy declined after late Ming: meng from Song +0.151 to late Qing −0.109; jiemeng from pre-Qin +0.067 to late Qing −0.098; tongmeng from Song +0.177 to late Qing −0.060. Even at this trough, however, it remains significantly higher than <em>universitas</em> candidate roots.</p>
+
+<p><strong>L7a <em>Communitas</em> mildly positive.</strong> she (+0.001), zongzu (+0.034), zhouli (+0.053), jishe (+0.052), sheji (+0.043). These are the Chinese forms of "territorial + kinship + ritual" legitimate collectives, bearing <em>communitas</em>'s function—providing "who we are" belonging without requiring absorption into a single political subject.</p>
+
+<div class="callout">
+  <p style="margin:0">L1–L3, L5, L7a together constitute the full inventory of Chinese discourse's legitimate collective vocabulary. This inventory is far richer than commonly thought—covering five layers: friendship, moral identity, ethical principles, scholarly activity, oath association, community. Chinese does not lack legitimate forms of "non-kin members organizing." So why did China still not develop constitutionalism? The answer is not in these five layers—they are all legitimate. The answer is in the remaining two: L6 (collective decision) and L7b (<em>universitas</em>).</p>
+</div>
+
+<h3 id="r-4-4-en">4.4 An Oscillating Legitimate Category: L6 Gongyi (directly rebutting Stasavage)</h3>
+
+<p>L6 (collective decision) has overall mean +0.032—mildly positive. But this mean masks an important temporal structure. Looking at "gongyi" specifically: pre-Qin +0.109, Western Han +0.165, Eastern Han +0.232, Tang −0.138, Song +0.181, Yuan −0.074, early-mid Ming +0.077, late Ming +0.113, early-mid Qing +0.063, late Qing +0.034.</p>
+
+<p><strong>First, Han is the peak.</strong> Eastern Han +0.232—highest of the ten periods, exceeding the Northern Song peak +0.181. Han-era "gongyi" sat in a stable positive semantic field, directly related to imperial-court collective consultation, exemplified by court deliberations (tingyi, chaoyi, boshiyi) extensively recorded in the <em>Hanshu</em> and <em>Hou Hanshu</em>.</p>
+
+<div class="callout warning">
+  <p style="margin:0"><strong>This directly rebuts Stasavage (2020).</strong> Stasavage explicitly states: "as far back as we have historical writing in China, we don't see traditions or histories of council governance or early democracy." This paper's evidence shows this is inaccurate. Han "gongyi" has strong positive polarity in word-embedding space, with semantic neighbors pointing to specific collective deliberation mechanisms (tingyi, chaoyi, boshiyi, yizheng). Han China did have a Stasavage-sense Level-B legitimate discursive space—only it never rose to Level A (legitimate political subject), because L7b (<em>universitas</em>) was always prohibited.</p>
+</div>
+
+<p><strong>Second, the Tang trough is striking.</strong> Tang polarity −0.138—the only negative value in the entire series. This reflects the special structure of Tang politics: an aristocratic-military polity displaces Confucian-bureaucratic collective deliberation from the center. Peter Bol's (1992) "This Culture of Ours" provides the mechanism: Tang "shi" are hereditary aristocrats; only Song "shi" transformed into examination-recruited bureaucrats; "gongyi" as collective-deliberation vocabulary depends on the shi's political subjectivity.</p>
+
+<p><strong>Third, Song is a revival of the Han precedent.</strong> Northern Song polarity recovers to +0.181—re-legitimization, not first legitimization. Yu Yingshi's (2003) "constitutionalization of state policy"—the institutionalization of Northern Song "guoshi" as the legitimacy foundation co-set by emperor and scholar-officials—can be reread as a restoration of Han collective-deliberation vocabulary.</p>
+
+<p>This temporal picture complicates the simple "factional prohibition" narrative and makes it more precise: L6 (collective decision) was never permanently locked—it cycled through legitimation and suppression following dynasties' political-philosophical orientations; L7b (<em>universitas</em>)—the real core target of the prohibition—shows uniformly negative polarity across all ten periods. This "L6 mutable, L7b invariant" asymmetric structure is the most precise morphological description of the factional prohibition.</p>
+
+<h3 id="r-4-5-en">4.5 A Consistently Prohibited Category: L7b <em>Universitas</em></h3>
+
+<p>L7b is the core category of this paper's claim and the most consistently, precisely prohibited. Single characters ranked by prohibition intensity (ten-dynasty mean): dang −0.095, chai −0.079, tu −0.077, lü −0.077, bei −0.074, lei −0.070, qun −0.060, zhong −0.041, wu −0.025, pai −0.023, tuan −0.011, <em>hui</em> <strong>+0.049</strong>.</p>
+
+<p>An obvious clustering structure: dang, chai, tu, lü, bei, lei, qun consistently negative (μ between −0.06 and −0.10), cross-dynasty stable, standard deviation 0.04–0.06. Zhong, wu, pai, tuan in a middle transition zone. "Hui" is the only escape.</p>
+
+<p><strong>Why this clustering? The semantic core.</strong> The prohibited group shares a specific core—individual absorbed into undifferentiated collective:</p>
+<ul>
+  <li>dang: secretly forming cliques (peng bi wei jian, "qun er bu dang")</li>
+  <li>qun: indistinguishable from the crowd ("qun ju zhong ri yan bu ji yi")</li>
+  <li>tu: swept into a trend (yi shi zhi tu, tudang)</li>
+  <li>bei: assimilated into a generation (wu bei zhi chi)</li>
+  <li>lei: classified as one kind (bu lei junzi)</li>
+  <li>chai: listed in the same rank (chai bei xiang jin)</li>
+  <li>lü: drawn into accompaniment (tong lü, non-individual)</li>
+</ul>
+
+<p>The common feature: canceling individual difference, absorbing members into an undifferentiated collective identity. This precisely corresponds to <em>universitas</em>'s core: "members absorbed as undifferentiated into legitimate collective." Chinese discourse precisely prohibits this semantic structure.</p>
+
+<p><strong>The escaping "hui."</strong> Why does "hui" escape? Its semantic core is fundamentally different: contractuality, visibility, members preserved—a meeting (a concrete, bounded event), a covenant (an explicit contract), a gathering (a temporary, dispersible assembly). Members are not absorbed—they participate as individuals and return to themselves when the meeting ends. This is the <em>conjuratio</em> core, not the <em>universitas</em> core. Because of this distinction, "hui" came to bear nearly all functions of "non-kin members legitimately organizing" in Chinese discourse: Xingzhonghui, Baoguohui, Guangfuhui, Tongmenghui, xuehui, yihui, guohui.</p>
+
+<p><strong>Compounds are more deeply prohibited.</strong> L7b prohibited compounds have ten-dynasty mean −0.108, deeper than single characters (−0.049). The deepening points to a specific mechanism: not "dang" as character, but any compound identified as "specific political collective": pengdang −0.130, qundang −0.097, sidang −0.204 (one of the most negative), yandang −0.130, qundao −0.147, qunxiong −0.128, bidang −0.096, edang −0.069. "<em>Sidang</em>" (private faction, μ = −0.204) is the most negative among all <em>universitas</em> compounds—matching the §4.3 finding that the factional sense of "dang" yields sim(dang, si) = +0.463: "<em>si</em>" and "<em>dang</em>" have fused into an inseparable core structure in Chinese discourse.</p>
+
+<h3 id="r-4-6-en">4.6 Boundary Probe: Single Character vs. Compound Divergence</h3>
+
+<p>Single "hui" is legitimate but Late Ming Fushe and Jishe are stigmatized. Single "she" is neutral but "jieshe" sinks in the late Qing. "Pai" as single is near-neutral (−0.023), but "xuepai" in the late Qing is −0.109. The "single legitimate / compound polluted" phenomenon reveals the prohibition's precise mechanism, and deserves a dedicated look.</p>
+
+<p>Table 5 (in the Chinese version) reveals the mechanism: a single root's legitimacy can be broken by a compound. A root may itself be legitimate, but once compounded with "specific political content" or "identifiable political collective," it can be pulled into prohibited territory.</p>
+
+<p><strong>Mechanism 1: Compounds carry more specific "political subject" content.</strong> "Hui" as single character refers to an abstract gathering event; "Fushe" and "Jishe" specifically refer to particular Late Ming political-scholarly collectives. Once readers identify such a collective as "acting as political subject," word-embedding space pulls it adjacent to "X dang."</p>
+
+<p><strong>Mechanism 2: Compounds are reverse-polluted by their usage contexts.</strong> "Fushe" in Late Ming corpus has nearest neighbors di, shan, zun, ji, li—all negative actions. This means "Fushe" was used primarily in contexts of being attacked. Word embeddings learn distributional similarity, which reflects usage context, so "Fushe" is automatically learned as neighbor to negative actions.</p>
+
+<div class="callout">
+  <p style="margin:0">The prohibition operates at the semantic-structure layer ("acting as legitimate political subject"), not the character layer. Reforming the prohibition cannot be achieved by creating a new character (e.g., importing "<em>zhengdang</em>" from Japanese in 1898)—once the new character is identified as carrying the <em>universitas</em> semantic structure, it is automatically pulled into prohibited territory. §4.11 will show the specific mechanism of "zhengdang" remaining prohibited despite being a new word in the late Qing.</p>
+</div>
+
+<h3 id="r-4-7-en">4.7 The Dangguzhihuo (Han Partisan Prohibition): Judicial Institutionalization</h3>
+
+<p>§4.5 has shown that "dang" is uniformly negative across dynasties. But this negativity already existed—originating in the pre-Qin <em>Analects</em>' "<em>qun er bu dang</em>." Then what role does the Dangguzhihuo (166–184) play in this long-period narrative?</p>
+
+<p><strong>Quantitative evidence.</strong> "<em>Dangu</em>" as compound: 0 occurrences in Western Han corpus, 39 in Eastern Han corpus—a clear semantic-coinage event. A new compound was created and repeatedly used over the 166–184 two-plus decades, entering the core inventory of Chinese political vocabulary. More crucially, "<em>dangren</em>" in Eastern Han corpus has semantic neighbors: su (0.42), song (0.38), yuan (0.36), wu (0.34), he (0.32), yan (0.30)—all pointing to specific actions of judicial persecution. This constitutes a complete judicial-persecution semantic field: accused (su, song), framed (wu), impeached (he), convicted (yan), claiming wrongful conviction (yuan).</p>
+
+<p>The Dangguzhihuo is hereby repositioned: not the origin of negativization (negativity predates it by seven centuries), but the joint of judicial institutionalization—encoding a long-existing semantic load into formal legal-administrative practice, thereby extending 1,700 years.</p>
+
+<p><strong>Specific persecution records.</strong> Quantitative evidence alone is thin; it must be coupled with historical narrative. The First Prohibition (166, Emperor Huan): the eunuchs used the sorcerer Zhang Cheng's disciple Lao Xiu to file an accusation against Li Ying and others—"raising imperial-university wandering scholars, allying with disciples from various commanderies, driving each other on, jointly forming a faction (<em>gong wei bu dang</em>), slandering the court, suspected of disordering customs." The accusation's key is "<em>gong wei bu dang</em>"—"<em>bu dang</em>" as a newly coined compound reframes the scholars' teacher-student-friend relations as organized political association. Emperor Huan bypassed the Three Excellencies and sent Li Ying and 200+ others directly to the eunuch-controlled Beisi Prison—a critical procedural inversion: judicial procedure originally belonging to the outer court was transferred to the inner-palace eunuch system. Chen Fan refused to sign, with "those investigated are all renowned across the realm, loyal upright officials caring for the state; even if not pardoned, what crime have they?"—a key evidence of judicial procedure being eunuchized and bypassed.</p>
+
+<p>The Second Prohibition (169): the "<em>gou dang</em>" mechanism reached its limit—conviction of one person extended to his disciples, former subordinates, fathers, sons, brothers, finally five generations. This is among the earliest documented "association crime" cases in Chinese legal history—the core mechanism is punishing not specific criminal acts but the identity of "being a member of a certain collective."</p>
+
+<p><strong>Dialogue with existing traditions.</strong> This paper's claim does not replace Chen Yinke's (1944) "ruling-class bloc competition," Kawakatsu's (1982) "pure-stream / village-opinion network," Utsunomiya's (1955) "magnate-imperial economic centrifugation," Yu Yingshi's (1987) "shi's collective consciousness," or Qu Tongzu's (1947) "li-fa unification"—it makes a new explanation at a different layer (vocabulary-computational). Chen and others explain why the Dangguzhihuo occurred; this paper explains what the Dangguzhihuo cast. Complementary, not substitutive.</p>
+
+<h3 id="r-4-8-en">4.8 Same-Root Different-Suffix Experiment: The Suffix Carries the Load</h3>
+
+<p>Strategy B directly isolates the suffix's contribution to polarity. If the same root (e.g., "<em>peng</em>") yields one polarity with "xue" and a completely different polarity with "dang," the polarity difference is purely attributable to the suffix itself.</p>
+
+<p>In Song-period data: + xue (scholarly) yields consistently positive polarity (mean +0.069); + dang (political body) yields consistently strongly negative polarity (mean −0.160). Polarity inversion Δ = 0.229, across six independent roots. This is the most direct evidence that the negativization of L7b <em>universitas</em> is carried by the suffix itself. Wilcoxon paired-rank test gives <em>p</em> &lt; 0.001, rejecting equivalent polarity. Large effect size (0.20+), six independent roots, single direction—not a single-outlier artifact but a structural fact at the semantic-field level.</p>
+
+<h3 id="r-4-9-en">4.9 Vector Arithmetic: Contagion of the Prohibition</h3>
+
+<p>Strategy C: add the "dang" character vector directly onto positive compounds and see its contagion power. If "dang" indeed occupies a negative position in word-embedding space, this addition should produce stable, predictable polarity downshift regardless of starting compound.</p>
+
+<p>Tested in Song corpus: gongyi (+0.106 → −0.032, shift −0.138), gonglun (+0.077 → −0.060, shift −0.137), tongzhi (+0.114 → −0.035, shift −0.149), tongdao (+0.132 → −0.022, shift −0.154), tongxin (+0.033 → −0.092, shift −0.125), gongxin (+0.105 → −0.053, shift −0.158), daoxue (+0.152 → +0.030, shift −0.122), xiangxian (+0.165 → +0.025, shift −0.140). Mean shift −0.140, standard deviation only 0.014. Eight independent starting compounds, all producing about −0.14 stable polarity shift after adding the "dang" vector. The negativity of "dang" is not a byproduct of any specific historical use—it is a property carried by the character's geometric position in word-embedding space itself. Wherever placed—gongyi, daoxue, xiangxian—it pulls the entire compound in the same direction with the same magnitude.</p>
+
+<h3 id="r-4-10-en">4.10 The Donglin Naming Experiment: Legitimate vs. Prohibited on the Same Group</h3>
+
+<p>Strategy D exploits the special historical structure of the Late Ming Donglin movement—the same group of people referred to under three different names in the same period—to construct a near-impossible controlled experiment in history.</p>
+
+<p>Late Ming corpus labels: Donglin Shuyuan (self-naming, <em>communitas</em> + scholarly frame), n=19, polarity <strong>+0.054</strong>; Donglin (neutral label), n=531, polarity −0.091; Donglin Dang (enemy naming, <em>universitas</em>), n=19, polarity <strong>−0.108</strong>; pengdang (generic <em>universitas</em>), n=53, polarity −0.137; yandang (specific <em>universitas</em>), n=20, polarity −0.148; junzi (positive control), n=1,025, polarity +0.131.</p>
+
+<p>The only variable is naming. Polarity difference 0.184—nearly the full distance between "junzi" (+0.131) and "xiaoren" (−0.115) in the Late Ming corpus.</p>
+
+<p>The change in <strong>semantic neighbors</strong> is even sharper. When Donglin is self-named "Shuyuan," nearest neighbors are "shuyuan" and "Pan (Panlong)"—a scholarly neighborhood. When called "Donglin Dang" by enemies, nearest neighbors become "dang (eunuch hat)," "dangren," "dang," "yan (eunuch)." The Late Ming corpus places "Donglin Dang" closer to "yandang" than to "junzi": sim(Donglin Dang, yandang) = +0.240, sim(Donglin Dang, junzi) = +0.038.</p>
+
+<p><strong>Dialogue with existing traditions.</strong> This finding precisely confirms three traditions: Hucker (1957)'s movement / faction distinction; Ono Kazuko (1962)'s "self/other asymmetric naming"—core members like Gu Xiancheng and Gao Panlong never called themselves "Donglin Dang"; the label "Donglin Dang" first appeared at scale in the 1611 Li Sancai case; Dardess (2002)'s record of label inflation (from a core of dozens to a blacklist of 309). This paper is the first to elevate this 60-year, three-tradition (Chinese / Japanese / English) qualitative claim into a statistically observable fact.</p>
+
+<p><strong>Micro-textual evidence: Ruan Dacheng and Wang Shaohui's <em>Donglin Roster</em> (1625).</strong> This text was presented to Wei Zhongxian as a list for dismissal and persecution—mapping 109 officials identified as "Donglin Dang" one-by-one onto the 108 heroes of the <em>Water Margin</em> (Li Sancai = Timely Rain Song Jiang; Ye Xianggao = Jade Qilin Lu Junyi; Zhao Nanxing = Resourceful Wu Yong; Gao Panlong = Heavenly Star Sun Li; Yang Lian = Heavenly Mighty Zhu Tong, etc.). Every official, censor, and lecturer who used the <em>Roster</em> produced new "Donglin Dang + thief/bandit/traitor/villain" co-occurrences in the corpus—this is the micro-textual production mechanism behind sim(Donglin Dang, yandang) = +0.240.</p>
+
+<p><strong>The Fushe extension.</strong> After Donglin, Zhang Pu founded the Fushe in 1629, deliberately avoiding "dang" by self-naming "<em>she</em>." Yet the Fushe still did not escape the prohibition's contagion—opponents named it "Donglin yuyu" (remnants), "Fushe Dang"; by the Hongguang period (1644–45) when Ruan Dacheng compiled the <em>Huangnan Lu</em>, the Fushe had been fully absorbed into the "X Dang" semantic field. The Fushe's polarity of −0.137 in Late Ming corpus is the quantitative trace of this process. The Fushe case corresponds to §4.6's boundary probe: the factional prohibition operates at the semantic-structure layer, regardless of character. Even self-defending with "she," once identified as <em>universitas</em>, it is pulled back into prohibited territory.</p>
+
+<h3 id="r-4-11-en">4.11 The Late-Qing Dual Track: Hui-Lineage Legitimate / Dang-Lineage Blocked</h3>
+
+<p>§4.10 shows the Late Ming naming mechanism. The cleanest modern verification comes from the late Qing—from 1898 to 1911, Western political vocabulary borrowed from Japanese split into two divergent tracks.</p>
+
+<p>Late Qing polarity: yihui (parliament, "hui" lineage / <em>conjuratio</em>) +0.043 legitimate; guohui (national assembly, "hui" lineage) +0.015 legitimate; xuehui ("hui" lineage) −0.041 near neutral; Baoguohui ("hui" lineage) +0.030 legitimate; <strong>zhengdang</strong> (political party, "dang" lineage / <em>universitas</em>) <strong>−0.077 prohibited</strong>; <strong>mindang</strong> (people's party, "dang" lineage) <strong>−0.103 prohibited</strong>; geming dang (revolutionary party) +0.070 anomalously positive; weixin dang (reform party) +0.013 near-neutral; xian dang (constitutional party) +0.063 anomalously positive.</p>
+
+<p>This contrast shows the factional prohibition did not block all imports of Western discourse—it precisely blocked only the "dang" lineage roots. "Hui" lineage (<em>conjuratio</em>) passes, "dang" lineage (<em>universitas</em>) is blocked—the last manifestation of the prohibition's precise morphology under Western impact.</p>
+
+<p><strong>Corpus-level critique of "zhengdang."</strong> "<em>Zhengdang</em>" appears only 6 times in the late Qing corpus (23.3 M characters). This sparsity itself is critical evidence—in imperial official discourse, "zhengdang" hardly entered any legitimate use context.</p>
+
+<p><strong>The anomaly of "<em>geming dang</em>" and "<em>xian dang</em>."</strong> These two have slightly positive late-Qing polarity (+0.070, +0.063), seemingly contradicting the claim. On closer look: sample sizes are small (n &lt; 30), and their nearest neighbors are not legitimate semantic fields but rather "huidang" (secret society), "luandang" (rebel party), "luan" (chaos)—a compound phenomenon where "the object of attack simultaneously gains reverse support from sympathizers." See online appendix B for contextual analysis. The anomaly does not shake the core claim; it only illustrates the complexity of discursive warfare.</p>
+
+<p><strong>This is not a Hofstadter-style transition.</strong> The Hofstadter (1969) transition of American "party" from illegitimate to legitimate in 1780–1840 required all party vocabulary to legitimate simultaneously. The late-Qing situation has only "hui" lineage legitimating while "dang" lineage remains prohibited—a partial transition where the core <em>universitas</em> category does not legitimate. The eventual transition—Republican founding (1912), party system, party-state regime—occurred outside the imperial discursive framework, in Republican-era journalism and May Fourth thought after 1911.</p>
+
+<p>The late-Qing failure was not for lack of new words. "Yihui" had legitimated; "guohui" too—both gained positive polarity in word-embedding space. What failed is <em>universitas</em> as legitimate political subject—"zhengdang" never achieved legitimacy within the imperial discursive framework. Until the Qing collapse in 1911, "dang" lineage roots remained in prohibited territory.</p>
+
+</section>
+
+<section id="dynamics-en">
+<h2>5. Cross-Dynasty Persistence: Discursive Dynamics</h2>
+
+<p>§4's findings summarize as: Chinese political vocabulary does not lack collective vocabulary, but precisely lacks the <em>universitas</em> category. Across 2,500 years, this absence operated with striking stability, crossing multiple foreign conquests and major institutional ruptures. Empirical evidence can tell us only "what happened," not "why it persisted so long." This chapter addresses the latter.</p>
+
+<p>Standard institutional-change theory (North 1990; Greif 2006; North, Wallis &amp; Weingast 2009; Acemoglu &amp; Robinson 2012) is insufficient here. These theories emphasize "self-erosion"—every institution contains the seeds of its own change. But <em>universitas</em> absence has no documented critical junctures across 2,500 years, crossing multiple foreign conquests and major institutional ruptures, and even the post-1840 Western impact could not reform it within the imperial framework. The character of this persistence differs from "self-eroding" institutional path dependence.</p>
+
+<h3 id="dynamics-5-1-en">5.1 Two Parallel Failures: Northern Song 1043 and Late Ming 1620s</h3>
+
+<p>The most direct evidence comes from two discursive wars 580 years apart, using the same discursive weapon, facing the same kind of opponent, ending in the same manner.</p>
+
+<p><strong>Northern Song Qingli Reform: 1043.</strong> Fan Zhongyan, Fu Bi, Ouyang Xiu and others, supported by Emperor Renzong, pushed for reform—accused by opponents of being "pengdang." Ouyang Xiu wrote <em>On Factions</em> (<em>Pengdang Lun</em>) in 1044—a key text in the history of Chinese political thought. The argument's strategy is <strong>lexical splitting</strong>: "Gentlemen ally with gentlemen through shared Way as friends; petty men ally with petty men through shared interest as faction… But I say petty men have no friendship; only gentlemen do." Through this split, "gentlemen's friendship" gains legitimacy, "petty men's faction" is defined as illegitimate.</p>
+
+<p>Why did the argument fail? Three reasons. (i) Discursive inconsistency—Ouyang Xiu had to use the dichotomy of "false friendship / true friendship," which itself presupposes the existence of "pengdang" as a continuous negative category. (ii) Political ineffectiveness—<em>On Factions</em> was a counter-attack, not initiative, doing discursive self-defense from a defensive position, unable to reset the rules. (iii) Historical examples can be reversed—Ouyang Xiu's positive examples of Shun and King Wu can be turned around: "We must prohibit factions to avoid Han-Tang collapse." The Qingli reform was rejected by late 1044; Fan, Fu, and Ouyang were forced out.</p>
+
+<p><strong>Late Ming Donglin: 1620s.</strong> Facing eunuch-faction accusations, Donglin scholars again invoked Ouyang Xiu's <em>On Factions</em>. Ono Kazuko's <em>Studies on Late Ming Factions and Societies</em> explicitly records Gu Xiancheng and Gao Panlong reusing the "gentlemen's friendship / petty men's faction" dichotomy in political disputation—they used the same discursive weapon as 580 years before. The result is identical. In 1625 the Six Gentlemen of Donglin died in prison; in 1626 the Latter Seven Gentlemen followed. Ruan Dacheng's <em>Donglin Roster</em> mapping 109 Donglin members onto 108 <em>Water Margin</em> heroes completes the most thorough symbolic reversal of the "gentlemen's friendship" narrative.</p>
+
+<div class="callout warning">
+  <p style="margin:0">580 years, the same discursive weapon, the same kind of opponent, the same failure—not coincidence. This shows <em>universitas</em> absence is not a one-off discursive event but a structural constraint, recurring before every generation of reformers, defeating the same discursive weapon in the same way every time.</p>
+</div>
+
+<h3 id="dynamics-5-2-en">5.2 Kawakatsu's Reverse Narrative: The Simultaneity of Loser and Winner</h3>
+
+<p>The first mechanism comes from an unexpected direction: placing the prohibition's losers and winners on the same map.</p>
+
+<p>Kawakatsu Yoshio's <em>Studies on the Six-Dynasties Aristocratic Society</em> (1982) traces the fate of the Dangguzhihuo's "pure-stream" scholars at the Wei-Jin transition. Suppressed pure-stream notables—the Yingchuan Xun, Zhong, and Chen lineages, the Kong Rong-Zheng Xuan blocs—formed networks through teacher-student, disciple, and former-subordinate relations; their descendants became the new ruling class at the Cao Wei–Western Jin transition; the "central evaluation" of the Nine-Rank system was built precisely on their "pure discussion" tradition. The Dangguzhihuo's losers became, decades later, the winners of the aristocratic system.</p>
+
+<p>Placing Kawakatsu's claim alongside this paper's finding: this paper argues <em>universitas</em> absence persists 2,500 years—a negative narrative about semantic-layer failure; Kawakatsu argues pure-stream transformed into aristocratic system after the prohibition—a positive narrative about social-layer success. Both narratives describe the same people, the same event, only seen at two different layers with different results.</p>
+
+<p>This observation answers a deep question: why doesn't <em>universitas</em> absence self-erode? Standard institutional-change theory's "self-erosion" mechanism depends on a premise: the institution must produce concrete losers who have motivation to dismantle it. But <em>universitas</em> absence does not produce pure losers. Those labeled "X dang" lose at the discursive layer but often win at the social layer—pure-stream notables become aristocracy; Donglin lecturers' families become Jiangnan gentry; even late-Qing "reform party" members later become important Republican-era political figures. The simultaneity of loss and gain leaves the prohibition's "losers" without motivation to dismantle.</p>
+
+<p>Going deeper: it is precisely this simultaneity that allows the prohibition to be repeatedly used by all political groups without anyone resisting. In every political conflict, the attacker uses "pengdang" to accuse opponents; the accused suffers discursively but their social position, lineage strength, and cultural capital are not destroyed by the accusation—they persist through other channels. In the next conflict, the previously accused may become the attacker, again using "pengdang" against new opponents. This eternal rotation turns the prohibition into a tool all political participants use repeatedly and none want dismantled.</p>
+
+<p>In game-theoretic terms: the prohibition is a stable Nash equilibrium because no single party has an incentive to stop using it first. Everyone continues using is stable; any one abandoning first is unstable. This is why <em>universitas</em> absence can persist 2,500 years—its stability does not depend on any specific political structure but only on a simple game-theoretic fact.</p>
+
+<h3 id="dynamics-5-3-en">5.3 De Weerdt on Southern Song Discursive Networks: Physical Existence is Not Sufficient</h3>
+
+<p>The second mechanism comes from an opposite empirical finding. Hilde De Weerdt's <em>Information, Territory, and Networks</em> (2015) systematically documents the trans-regional discursive network Southern Song literati built through notebooks, court gazettes, maps, collected works, private histories. The network's scale and density are not small—by the late 11th century, the Song court no longer monopolized information production about itself and its territory; literati circulated sensitive political commentary through unofficial texts.</p>
+
+<p>This has direct implications for Mokyr-Tabellini. M-T's "buzz network" mechanism says the horizontal network of European guilds-cities-parliaments is key to constitutional evolution. If China had no such network, M-T's claim is verified in China. But De Weerdt breaks this logical chain—Southern Song already had a vast, trans-regional, multi-genre literati discursive network.</p>
+
+<p>So why did Southern Song not produce constitutional results? De Weerdt's own answer is crucial: "The network strengthened the role of remonstrance to imperial power and expanded elite access to information, but did not create horizontal political structures or constitutional constraints." This is the further refinement of this paper's claim on De Weerdt's empirical basis: Mechanism 1b's physical existence is insufficient—even when a literati network exists, if it is framed at the discursive layer as "remonstrance to the emperor" rather than "independent political organization" (i.e., <em>universitas</em>), it cannot convert into constitutional effect. Southern Song literati could criticize the living in notebooks, but could not organize through "X dang" or "X hui" to form institutional constraints on imperial authority—because the discursive layer prohibited <em>universitas</em>.</p>
+
+<h3 id="dynamics-5-4-en">5.4 Deng Xiaonan's "Ancestral Law": The Same-Shape Phenomenon of Discursive Instrumentalized Equilibrium</h3>
+
+<p>The third mechanism comes from a seemingly unrelated discursive field. Deng Xiaonan's <em>The Law of the Ancestors</em> (2006) systematically analyzes "ancestral law" as a Northern Song political discursive norm—a composite, stable in core spirit but flexible at the edges, essentially an aggregation of scholar-official discourse. Deng's key finding: "ancestral law" is invoked bidirectionally in factional strife. Fan Zhongyan's reform party used "ancestral law" as "theoretical basis for limiting current abuses and rectifying administrative customs"; only Wang Anshi dared "frontally question," declaring "ancestral law is not worth keeping." But more commonly both reformers and conservatives invoked "ancestral law."</p>
+
+<p>Placing these two phenomena together, a common discursive dynamic emerges: as long as a political word can be bidirectionally invoked by the same group (usable for me, usable against me), it forms a stable instrumentalized equilibrium no one can dismantle. "Pengdang" is the negative version of this equilibrium—both sides use it to accuse the other, neither accepts the accusation; "ancestral law" is the positive version—both invoke it to legitimate themselves, neither can monopolize the legitimacy. This shows <em>universitas</em> absence is not an isolated "Chinese exceptionalism"—it is a manifestation of a specific discursive dynamic (bidirectional instrumentalized equilibrium). The same dynamic operates on other words.</p>
+
+<h3 id="dynamics-5-5-en">5.5 Summary</h3>
+
+<p>Combining §5.1–5.4—Ouyang Xiu's <em>On Factions</em>'s semantic inconsistency in two failures (5.1), Kawakatsu's reverse-narrative simultaneity of loser and winner (5.2), De Weerdt on insufficiency of physical network presence (5.3), Deng Xiaonan on the same-shape phenomenon of "ancestral law" as instrumentalized equilibrium (5.4)—the specific dynamics of <em>universitas</em> absence's 2,500-year persistence emerge.</p>
+
+<p>It is not a particular dynasty's political suppression, not imperial authority's final veto on horizontal association, not a Confucian-ethics byproduct, not a linguistic expression of lineage structure. It is a specific, precisely identifiable discursive dynamic—bidirectional instrumentalized equilibrium—repeatedly used and thereby reinforced by all political participants, with no one motivated to dismantle because it produces no pure losers, and stable because the discursive-layer failure can be compensated at the social layer.</p>
+
+<p>This dynamic makes <em>universitas</em> absence a phenomenon of a different character from organizational-institutional path dependence. §6 places this finding in the cross-civilizational comparative landscape.</p>
+
+</section>
+
+<section id="comparison-en">
+<h2>6. Cross-Civilizational Comparison</h2>
+
+<h3 id="comparison-6-1-en">6.1 Joseon Korea: Sarim Academies as Isolation Test</h3>
+
+<p>If <em>universitas</em> absence is only a special product of Chinese political culture or Chinese state structure, it should weaken or disappear in other societies operating under Confucian-classical discourse. Joseon Korea (1392–1897) provides the cleanest isolation test.</p>
+
+<p>Joseon was actually more complete than Northern Song on Mechanism 1. Academies, starting with Yi Hwang's founding of the Sosu Academy in 1543, grew to about 1,000 by 1741. By Mokyr-Tabellini standards they are textbook territorial corporations: endowed land, tax exemption, royal grants of rice and slaves, autonomous rules, multi-generational scholar genealogies (Ch'oe 1999). They provided 200+ years of rural infrastructure for sarim political-faction reproduction.</p>
+
+<p>If Mechanism 1 alone suffices to trigger constitutional evolution, Joseon should have been the most likely candidate. Yet Joseon produced no constitutional result. In 1741 King Yeongjo explicitly framed academy disbandment as "ending <strong>붕당</strong> (<em>pengdang</em>) corruption"—using the same two Chinese characters "朋黨" debated by Northern Song reformers and opponents during 1043–1100. The Confucian discursive grid travels with classical vocabulary across the Sino-Korean cultural sphere, remaining effective across polity boundaries.</p>
+
+<p>Joseon's failure can be read from three mutually compatible angles. (a) Mechanism 2 internal violation: Joseon's academy network was infrastructure for factional segregation, with Easterner and Westerner networks producing mutually antagonistic discourse. (b) Mechanism 1c violation: Yeongjo's 1741 abolition preemptively eliminated institutional balance before constitutional crystallization, structurally parallel to Meiji 1871's <em>haihan chiken</em> (abolition of domains). (c) Mechanism 2 root: the prohibition's discursive constraint operates wherever Confucian classical vocabulary norms operate, independent of organizational substrate—the constraint follows discursive vocabulary, not polity boundaries.</p>
+
+<p>The current empirical basis on Joseon rests on secondary literature (Ch'oe 1999). The next research stage should train an independent corpus of the Joseon <em>Veritable Records</em> and perform cross-dynasty word-embedding analysis on the Korean "<em>붕당</em>"—elevating Joseon from a qualitative comparative case to a two-case quantitative test.</p>
+
+<h3 id="comparison-6-2-en">6.2 Medieval Genoa: The Fragility of Path B</h3>
+
+<p>If Joseon shows Mechanism 1 alone is insufficient, Greif's (2006) Genoese case shows the opposite possibility: Mechanism 1 is not strictly necessary either—provided sufficient institutional self-enforcing design.</p>
+
+<p>Medieval Genoa (1099–1339) was governed by consanguineous lineages (<em>alberghi</em>), structurally closer to Chinese lineages than to European territorial guilds. Yet the <em>podesteria</em> (1194–1339) achieved 145 years of commercial-revolution stability through ingenious mechanism design. The core is the <em>podestà</em> institution: the chief executive must be a non-Genoese, employed for one year without re-election, with his own armed retinue—forming a delicate three-way balance among the Maneciano lineage, the Carmadino lineage, and the <em>podestà</em>. Long-distance trade grew at over 6% annually in 1191–1214; by 1314 it reached forty-six times the 1160 level.</p>
+
+<p>But this alternative path is fragile. Greif himself argues for the self-erosion of the <em>podesteria</em>—it preserved and reinforced the underlying lineage structure rather than dissolving it. After 1339, Genoa collapsed into 200+ years of civil war, with thirty-nine documented revolutions (Epstein 1996), finally losing to Venice in 1381 and entering long decline. The fragility's deep root is in Mechanism 3: the underlying community was not dissolved.</p>
+
+<p>The Genoa case illuminates imperial China by structural analogy. China had institutional structures similar to <em>podestà</em>—the eunuch system. Eunuchs were similarly non-aristocratic insiders, similarly possessing personal coercive capacity, similarly independent of scholar-official lineage networks. But the eunuch system's function differed fundamentally from <em>podestà</em>: it served imperial sovereignty, not cross-lineage balance. Why? Combining Greif's framework with this paper's §4 empirical results: the Confucian discursive grid forbids "balance among elite coalitions" from being conceptualized as a legitimate political problem solvable by institutional design. At the discursive layer, "factional balance" is already a priori illegitimate (any "X dang" is already prohibited). Imperial China lacked the <em>podestà</em> institution not because the design was unknown—it was fully reachable in institutional imagination—but because the political logic generating Path B never crystallized as legitimate.</p>
+
+<h3 id="comparison-6-3-en">6.3 The Islamic World: An Isomorphic Companion Case</h3>
+
+<p>A key question now forms: is <em>universitas</em> absence China-specific or a specific case of a more general cross-civilizational dynamic? Answering requires finding a mechanism-level isomorphic case in a different civilizational context.</p>
+
+<p>Jared Rubin's <em>Rulers, Religion, and Wealth</em> (2017) provides such a case. Rubin argues the Islamic world experienced a discursive-legitimacy prohibition near-isomorphic to <em>universitas</em> absence at the mechanism level—the <em>ulama</em> (religious scholars) provided legitimacy to sultans in exchange for a seat at the bargaining table, excluding merchant elites from this coalition. This arrangement self-reinforces: once a sultan depends on <em>ulama</em> legitimation, turning to other legitimacy sources would offend the entrenched <em>ulama</em>.</p>
+
+<p>Structural isomorphism: both feature discursive-layer prohibition (of <em>universitas</em> in China; of merchant access to legitimacy bargaining in Islam), self-reinforcing equilibrium, excluded elites (cross-kinship horizontal political organization; commercial elites), production of no pure losers, and cross-polity stability (pre-Qin to late Qing; Abbasid to Ottoman). Three implications: (i) <em>universitas</em> absence is not China-unique but a specific form of a particular discursive dynamic; (ii) "discursive-legitimacy prohibition" as an institutional form parallel to "institutional-organizational path dependence" should be included in comparative political science's core theoretical toolbox; (iii) this paper's method (word-embedding analysis tracking 2,500 years of discursive prohibition) can be replicated on Arabic-language corpora to quantitatively verify Rubin's qualitative claim.</p>
+
+<h3 id="comparison-6-4-en">6.4 Singapore: A Paradigm of Simultaneous Three-Mechanism Reform</h3>
+
+<p>Singapore (independent 1965 to present) is a Chinese-majority polity (about 75% Chinese), having systematically reformed all three mechanisms.</p>
+
+<p><strong>Mechanism 1 reform:</strong> Westminster parliament established as the supreme-law-counterparty institution. Numerous statutory boards built—Economic Development Board (EDB), Housing Development Board (HDB), Central Provident Fund (CPF), etc.—each with independent legal personality, independent budget, independent operating rules. They are not lineage extensions but real territorial corporations.</p>
+
+<p><strong>Mechanism 2 reform:</strong> the English public sphere bypasses <em>universitas</em> absence. Although Singapore's official languages include English, Mandarin, Malay, and Tamil, important political topics are discussed in English. Parliamentary debate, legal texts, administrative documents, news commentary are primarily in English. This choice is not accidental—it lets Singapore's public political discussion bypass the Chinese-vocabulary semantic trap. "Political party" in English has no "pengdang" stigma. Through language switching, Singapore effectively exited the <em>universitas</em>-absence discursive framework.</p>
+
+<p><strong>Mechanism 3 reform:</strong> HDB policy deliberately dismantles consanguineous community. Since the 1960s, large-scale public housing has been built—about 80% of Singaporean citizens today live in HDB flats. Specific policies include the Ethnic Integration Policy 1989 (racial quotas), small nuclear-family units, and mandatory SERS (Selective En bloc Redevelopment Scheme). This is the concrete plan for Ōtsuka-sense <em>kyōdōtai</em> dissolution.</p>
+
+<p>Singapore's success is not the success of any single mechanism but the result of simultaneously reforming all three. Any partial reform targeting only one mechanism would be insufficient.</p>
+
+<h3 id="comparison-6-5-en">6.5 Integration of the Four Cases</h3>
+
+<p>Cross-civilizational comparison matrix:</p>
+<table>
+<thead><tr><th>Case</th><th>Mech 1</th><th>Mech 2</th><th>Mech 3</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>China (pre-Qin to late Qing)</td><td>❌</td><td>❌</td><td>❌</td><td><em>Universitas</em> absence stable for 2,500 years</td></tr>
+<tr><td>Joseon Korea</td><td>✓ (academies)</td><td>❌</td><td>❌</td><td>1741 academy abolition, no modernization</td></tr>
+<tr><td>Medieval Genoa</td><td>❌ (kin lineage)</td><td>⚠️ (partial substitute)</td><td>❌</td><td>145-yr Path B stable, 1339 self-erosion</td></tr>
+<tr><td>Islamic world</td><td>⚠️</td><td>❌ (isomorphic prohibition)</td><td>❌</td><td>Isomorphic with China, no modernization</td></tr>
+<tr><td>Singapore</td><td>✓</td><td>✓</td><td>✓</td><td>Only stable Chinese constitutional polity</td></tr>
+</tbody>
+</table>
+
+<p>Only when all three mechanisms are simultaneously present can stable constitutional development occur. This claim is isomorphic to the Acemoglu-Robinson "narrow corridor" model (only when state and society are both strong and mutually constrained does one enter the corridor), but more refined than the A-R model—it unpacks "society" into three independent but mutually reinforcing mechanisms.</p>
+
+</section>
+
+<section id="persistence-en">
+<h2>7. Lock Persistence Dynamics: Dialogue with Institutional-Change Theory</h2>
+
+<h3 id="persistence-7-1-en">7.1 Limits of Standard Institutional-Change Theory</h3>
+
+<p>Contemporary institutional-change theory's mainstream—North (1990), North &amp; Weingast (1989), Greif (2006), Acemoglu &amp; Robinson (2012), North, Wallis &amp; Weingast (2009)—shares a core claim: all institutions contain the seeds of their own change. Each institutional use produces new pressures—concrete winners and losers, new resource allocation, new discursive-legitimation challenges—which accumulate over time and eventually trigger institutional change at "critical junctures."</p>
+
+<p>But <em>universitas</em> absence rejects this framework. It spans 2,500 years without any documented critical juncture, crosses multiple foreign conquests and major institutional ruptures, and even the post-1840 Western impact could not reform it within the imperial framework. The depth of this persistence is puzzling.</p>
+
+<h3 id="persistence-7-2-en">7.2 <em>Universitas</em> Absence as a Different Kind of Institutional Form</h3>
+
+<p>The paper's core theoretical claim: <em>universitas</em> absence differs in nature from organizational-institutional path dependence; it is a different kind of institutional form.</p>
+
+<p><strong>(i) It produces no concrete losers.</strong> Material institutions produce concrete winners and losers; losers can mobilize forces for change. But discursive-legitimacy prohibition produces no concrete losers—every political actor can accuse opponents of "pengdang" while denying it for himself. The lock is therefore universally instrumentalized rather than universally resisted. Every factional struggle uses the prohibition to attack opponents; every use reinforces the prohibition.</p>
+
+<p><strong>(ii) It mutually reinforces with co-symbiotic structures.</strong> Mechanism 2 and Mechanism 3 mutually reinforce in the Chinese context. The Confucian "Five Relationships" (ruler-subject, father-son, husband-wife, elder-younger, friend-friend) precisely depict the ethics of consanguineous community; consanguineous community in turn provides empirical bedrock for Confucian ethics. The two mechanisms form a stable coupling equilibrium.</p>
+
+<p><strong>(iii) External shocks are absorbed within compatible discursive frameworks.</strong> Foreign conquest (Mongol, Manchu) made Chinese society face bureaucratic systems organized by principles compatible with the prohibition. Post-1840 Western impact brought alternative frameworks, but late-imperial responses were either suppressed or absorbed. The real transformation—Republican-era party politics, May Fourth discursive revolution, post-1949 party-state regime—all occurred outside the imperial discursive framework.</p>
+
+<h3 id="persistence-7-3-en">7.3 Two Historical Paths for Reforming the Prohibition</h3>
+
+<p><strong>Path A: wholesale exit from the discursive framework.</strong> Singapore took this path through the English public sphere. The condition for success: there must be an already-developed alternative language system as exit option.</p>
+
+<p><strong>Path B: state-led discursive engineering.</strong> The post-1949 Chinese Communist Party, through top-down party-state authority, pulled "dang" out of its negative semantic field, imposing new positive semantic associations. This reform was gradually completed in the 20th century 1950s–80s. But the success is point-like, not structural—"dang" as abbreviation for "Chinese Communist Party" gained positive polarity, but other L7b vocabulary ("paixi" factions, "bangpai" cliques) remains negative. The success of discursive engineering is monopolistic—it remolded the prohibition into a new form of "one party legitimate, all others illegitimate."</p>
+
+<h3 id="persistence-7-4-en">7.4 Methodological Implications for Institutional-Change Theory</h3>
+
+<p>First, discursive-legitimacy prohibition needs to be included in comparative political science's core theoretical toolbox—it is an independent institutional form, not merely "cultural background" for existing institutional variables. Second, analyzing such prohibitions requires new methodological tools—word-embedding analysis, network analysis, concept-drift analysis. Third, the time scale needs recalibration—discursive-legitimacy prohibitions may operate on a time scale an order of magnitude longer than organizational-institutional path dependence. Fourth, "self-erosion" as universal mechanism needs to be qualified—all organizational-institutional forms producing concrete losers contain the seeds of their own change, but discursive-legitimacy prohibitions produce no concrete losers.</p>
+
+</section>
+
+<section id="limitations-en">
+<h2>8. Limits and Future Directions</h2>
+
+<h3 id="limitations-8-1-en">8.1 Methodological Limits</h3>
+
+<p><strong>The boundary of static word2vec.</strong> §3.5 addresses this through rule-based polysemy disambiguation. A more thorough approach is contextualized word embeddings—BERT-based GuwenBERT, SikuBERT, etc. This paper has not yet done this comparison; it should be a priority for the next stage.</p>
+
+<p><strong>Corpus selection bias.</strong> The late-Qing corpus is dominated by the <em>Qing Veritable Records</em>, a state-style that systematically suppresses heterodox vocabulary. §4.11 already acknowledged this and limited the claim to "within the imperial-official framework." Future work should incorporate Republican-era newspaper corpora, revolutionary manifesto corpora, treaty-port bilingual printed matter.</p>
+
+<p><strong>Anchor-word selection risk.</strong> This paper uses four independent anchor families + extended 30-character anchor set + leave-one-out cross-validation + internal cohesion check, four robustness strategies. A more thorough approach uses unsupervised methods (PCA / UMAP reduction).</p>
+
+<p><strong>Endogeneity.</strong> Causal direction between discourse and institutions has recursive dynamics—the lock is reproduced by every generation of users while constraining their discursive options. §4.11 provides empirical evidence that discourse precedes institutions through the late-Qing polarity of "zhengdang" preceding the actual party institution.</p>
+
+<h3 id="limitations-8-2-en">8.2 Empirical Extensions</h3>
+
+<p>Four next-stage tasks: (i) train an independent Joseon <em>Veritable Records</em> corpus, elevating §6.1's isolation test from qualitative to quantitative; (ii) extend to Vietnamese corpora—Vietnamese Later Lê–Nguyễn is another Confucian-discursive-grid case; (iii) BERT contextualized-vector robustness check—redo the Donglin naming experiment on Late Ming corpus; (iv) connect with Jin Guantao's DSMCTL (1830–1930)—integrating this paper's pre-1911 quantitative findings with Republican-era analysis, forming a continuous narrative from pre-Qin to Republican.</p>
+
+<h3 id="limitations-8-3-en">8.3 Cross-Civilizational Extensions</h3>
+
+<p><strong>Replication on Islamic corpora.</strong> This paper's method can be replicated on classical Arabic corpora to quantitatively verify Rubin's qualitative claim. <strong>European control experiments.</strong> The Hofstadter (1969) American "party" transition from illegitimate to legitimate in 1780–1840 can be quantitatively replicated using EEBO-ECCO and other English early-modern corpora; Greif's claims on Genoa can be tested using Latin chronicle corpora.</p>
+
+</section>
+
+<section id="conclusion-en">
+<h2>9. Conclusion</h2>
+
+<p>Back to the opening scene. In 1894 Sun Yat-sen chose "Xingzhonghui" not "Xingzhongdang." In 1898 the Guangxu Emperor's "Mingding Guoshi" edict contains no "zhengdang." In 1905 Chinese students in Tokyo used "Tongmenghui" not "Tongmengdang." In 1912 Song Jiaoren reorganized the Tongmenghui into the Kuomintang, having to use "guo" (national) to lend legitimacy to "dang"; this experiment collapsed when Song was assassinated in 1913.</p>
+
+<p>Behind every detail is the same question: <strong>why is "hui" legitimate while "dang" remains an attack-word? Why does every reformer trying to organize a supra-kinship, durable political body capable of dialogue with supreme authority have to walk carefully around the character "dang"?</strong></p>
+
+<p>This paper's answer comes in four specific findings.</p>
+
+<p>(i) Chinese political vocabulary does not lack "collective vocabulary"—L1 friendship, L2 moral identity, L3 ethical principles, L4 scholarly activity, L5 <em>Conjuratio</em>, L7a <em>Communitas</em> are all legitimate. What is precisely prohibited is L7b <em>Universitas</em>—dang, qun, tu, bei, lei, chai, zhong and other candidate roots.</p>
+
+<p>(ii) The sole escape is "hui" (μ = +0.049). It bears nearly all legitimate horizontal-association functions—yihui, guohui, xuehui, Baoguohui, Xingzhonghui, Tongmenghui, Guangfuhui. This is no accident—"hui"'s semantic core is contractual, visible, members-preserved collective (i.e., <em>conjuratio</em>), not absorbed-individual legitimate collective (i.e., <em>universitas</em>).</p>
+
+<p>(iii) The prohibition operates at the semantic-structure layer of "acting as legitimate political subject," not at the specific-character layer. Single "she" and "meng" are legitimate, but "Fushe" and "jiemeng" are stigmatized; "pai" is near-neutral but "xuepai" sinks in late Qing. Reforming the prohibition cannot be achieved by creating a new character—once the new character is identified as carrying the <em>universitas</em> semantic structure, it is automatically pulled into prohibited territory.</p>
+
+<p>(iv) The late-Qing dual track provides the cleanest modern verification. "Hui" lineage (yihui, guohui, xuehui, Baoguohui) legitimating, "dang" lineage (zhengdang, mindang) blocked—the last manifestation of the prohibition's precise morphology under Western impact.</p>
+
+<div class="callout">
+  <p style="margin:0">China did not develop constitutionalism not because Chinese discourse lacks "collective vocabulary"—it precisely lacks a specific category: <em>universitas</em> as legitimate political subject. From the pre-Qin <em>Analects</em>' "<em>qun er bu dang</em>" onward, across the judicial institutionalization of the Han partisan prohibition, the Northern Song Qingli discursive war, the Late Ming Donglin naming war, the late-Qing introduction of "zhengdang"—2,500 years of stable operation.</p>
+</div>
+
+<p>Integrating into a three-mechanism framework—territorial corporate organization, discursive legitimacy of horizontal association, dissolution of consanguineous community—this constitutes the Chinese-context refinement of the Acemoglu &amp; Robinson "narrow corridor" model. Joseon (Mechanism 1 sufficient but 2, 3 failed), Genoa (Mechanism 1 absent but partial substitution via Path B, eventual self-erosion), Islamic world (mechanism-level isomorphic with China), Singapore (simultaneous three-mechanism reform)—four cross-civilizational cases verify this framework from different angles.</p>
+
+<p>This paper contributes to three literatures. To computational conceptual history: it demonstrates that quantitative cross-dynasty vocabulary analysis can produce results unattainable by close reading alone—specifically, the precise boundary map of "legitimate categories / prohibited categories" produced by scanning the full spectrum rather than single characters. To Chinese political history: it refines Levine's "factional lock" hypothesis into "the precise absence of the <em>Universitas</em> category," placing "dang" research back into the entire semantic field it inhabits. To comparative institutional analysis: it provides the first cross-civilizational quantitative test of the Confucian discursive-legitimacy prohibition, placing it alongside Rubin's Islamic religious-legitimacy prohibition to show that "discursive-legitimacy prohibition" is an institutional form different in nature from organizational-institutional path dependence.</p>
+
+<p>Back to Sun Yat-sen's choice of "Xingzhonghui" in 1894. This choice is neither accidental linguistic sense nor any individual's strategy—it is the concrete result of 2,500 years of discursive sediment landing on one specific reformer. Behind "hui" is a complete legitimate <em>conjuratio</em> semantic field—meng, shi, qi, yue, jieyi, huimeng. Behind "dang" is the judicial-persecution semantic field of the Han partisan prohibition, the failed echo of Ouyang Xiu's <em>On Factions</em>, the concrete blood of the Six Gentlemen of Donglin dying in prison, the accumulated pressure of "X dang" as unified illegitimate semantic cluster. Sun Yat-sen choosing "hui" not "dang" is the same thing as Ouyang Xiu in 1044 choosing "gentlemen's friendship" not "petty men's faction," as Donglin lecturers in the 1620s choosing "Shuyuan" not "dang," as the Fushe in 1629 choosing "she" not "dang"—each time a specific reformer's specific response to the same historical pressure, each time following the same discursive ecology: pick words from legitimate <em>conjuratio</em> / <em>communitas</em>, avoid the prohibited <em>universitas</em>.</p>
+
+<p>The specific form of <em>Universitas</em> absence is here. It is not abstract "Chinese exceptionalism," not generic "Chinese spirit," not any particular dynasty's political suppression. It is a specific, precisely identifiable discursive dynamic—the precise prohibition of a particular semantic structure—operating repeatedly across multiple polities for 2,500 years. Understanding it is the necessary starting point for understanding Chinese political evolution; reforming it is the necessary starting point for understanding China's future evolution.</p>
+
+</section>
+
+<section id="references-en">
+<h2>References</h2>
+
+<p style="color:var(--muted);font-size:14px">Full reference list shared with Chinese version. Switch to 中文 to view the categorized bibliography.</p>
+
+</section>
+
+</div>
+<!-- end lang-en-only -->
 
 </main>
 </div>
